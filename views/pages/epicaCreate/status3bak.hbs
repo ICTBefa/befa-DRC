@@ -1,0 +1,203 @@
+<link href="/node_modules/summernote-0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="/node_modules/summernote-0.8.18/dist/summernote.min.js"></script>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Create EPICA</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-11" style="margin-top: 1px;">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center">
+                    <img src="/assets/dist/img/logo.png"
+                    class="rounded" alt="logo">
+                    <p class="font-weight-bold" style="margin-top: 50px; ">FORM PROBLEM IDENTIFICATION & CORRECTIVE ACTION</p>
+                </div>
+
+                <form id="deskripsiM">
+                    <div>No :  <span id="Nomor" class="highlight">{{dataEpicaMaster.no_pica}}</span></div>
+                    <div>Bagian :  <span class="highlight">{{dataEpicaMaster.nama_department}}</span></div>
+                    <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                        <div class="col-sm-9">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ketidaksesuaian" id="inlineRadio1" value="1">
+                                <label class="form-check-label" for="inlineRadio1">Audit Mutu</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ketidaksesuaian" id="inlineRadio2" value="2">
+                                <label class="form-check-label" for="inlineRadio2">Temuan Ketidaksesuaian</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ketidaksesuaian" id="inlineRadio3" value="3">
+                                <label class="form-check-label" for="inlineRadio3">Keluhan Pelanggan</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="Desc">Deskripsi Masalah/Potensial Masalah :</label>
+                                {{!-- <textarea class="form-control" id="Desc" name="Desc" rows="3"></textarea> --}}
+                                <textarea id="summernote" name="editordata">{{dataEpicaMaster.deskripsi_masalah}}</textarea>
+                                
+                            </div>
+                            <div class="row justify-content-end">
+                                <div class="col-6 col-sm-3 border border-dark">
+                                <p class="text-center">Pelaksana</p>
+                                <p name="pelaksana" style="text-align:center">{{dataEpicaMaster.pelaksana_fullname}}</p>
+                                </div>
+                                <div class="col-6 col-sm-3 border border-dark">
+                                <p class="text-center">Pengusul</p>
+                                <p name="pengusul" style="text-align:center">{{dataEpicaMaster.pengusul_fullname}}</p>
+                                </div>
+                            </div>
+                            <div id="akar">
+                                <label for="akar">Akar Masalah :</label>
+                                <textarea id="summernote1" name="editordata"></textarea>
+                            </div>
+                        <table class="table table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="text-align: center;">No</th>
+                                    <th scope="col" style="text-align: center;">Tindakan Koreksi/Pencegahan</th>
+                                    <th scope="col" style="text-align: center;">PIC</th>
+                                    <th scope="col" style="text-align: center;">Batas Waktu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td scope="row" style="text-align: center;" class="align-middle" name="nomor1">1.</td>
+                                    <td class="align-middle">
+                                        <div class="form-group">
+                                            {{!-- <textarea class="form-control" id="Tindakan1" name="Tindakan1" rows="3"></textarea> --}}
+                                            <textarea id="summernote3" name="editordata1"></textarea>
+                                            
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center;" class="align-middle">Otto</td>
+                                    <td class="align-middle">
+                                        <input type="text"  id="date" name="date1" value="" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-primary float-right addRow" id="tindakan">
+                            Tambah Tindakan
+                        </button>
+                        <br>
+                        <br>
+                    <button type="button" class="btn btn-primary float-right">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{{#section 'custom_script'}}
+<script>
+    var status="{{status}}"
+    var masalah="KP"
+    var data="KP"
+    $(function(){
+        if (status == 1) {
+            
+        } if (status == 2 ){
+                        
+        } if (status == 3 ){
+            $("#summernote1").val('asdd');
+            $('#summernote').summernote({
+                toolbar: false,
+            });
+            $('#summernote1').summernote({
+                toolbar: false,
+            });
+            $("#summernote").summernote('disable');
+            $("#summernote1").summernote('disable');
+            $('input[name=ketidaksesuaian]').attr("disabled",true);
+            if (masalah == "KP" ){
+                $("input[name=ketidaksesuaian][value=" + 3 + "]").prop('checked', true);
+            } if (masalah == "AI"){
+                $("input[name=ketidaksesuaian][value=" + 1 + "]").prop('checked', true);
+            } if  (masalah == "TK"){
+                $("input[name=ketidaksesuaian][value=" + 2 + "]").prop('checked', true);
+            }
+            $(document).ready(function() {
+                $('#summernote1').summernote();
+            });
+            var i = 2;
+            var j = 4;
+            $(function() {
+                $('input[name="date1"]').daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    minYear: 1901,
+                    maxYear: parseInt(moment().format('YYYY'),10)
+                }),
+                $('input[name="date'+i+'"]').daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    minYear: 1901,
+                    maxYear: parseInt(moment().format('YYYY'),10)
+                });
+            });
+
+            var pic = "Otto";
+
+            $('.addRow').on('click', function() {
+                addRow();
+            });
+
+            $(document).ready(function() {
+                $("#summernote3").summernote();
+            });
+
+            function addRow() {
+                var tr ='<tr>'+
+                        '<td scope="row" style="text-align: center;" class="align-middle" name="nomor'+i+'">'+i+'.</td>'+
+                        '<td>'+
+                        '<div class="form-group">'+
+                            '<textarea id="summernote'+j+'" name="editordata'+i+'"></textarea>'+
+                        '</div>'+
+                        '</td>'+
+                        '<td style="text-align: center;" class="align-middle" name="pic'+i+'">'+ pic +'</td>'+
+                        '<td class="align-middle">'+
+                            '<input type="text" id="date" name="date'+i+'" value="" />'+
+                        '</td>'+
+                        '</tr>';
+                $('tbody').append(tr);
+                jQuery.ready();
+                $("#summernote"+j+"").summernote();
+
+                $('input[name="date'+i+'"]').daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    minYear: 1901,
+                    maxYear: parseInt(moment().format('YYYY'),10)
+                });
+
+                i++;
+                j++;
+
+                if (i == 4){
+                    $("#tindakan").hide();
+                }
+            };
+        }
+    });
+</script>
+{{/section}}
+

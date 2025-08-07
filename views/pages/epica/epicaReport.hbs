@@ -1,0 +1,222 @@
+
+<style> 
+    .centerTable {
+        text-align: center; 
+        vertical-align: middle;
+    }
+    .blueBG{
+        background-color: lightblue;
+    }
+    .greenBG{
+        background-color: lightgreen;
+    }
+    .otherBG{
+        background-color:rgba(230, 208, 112, 0.651);
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b> {{title}} </b> </h1>
+                    {{#if status}}
+                    <h4 class="m-0 text-{{statusColor}}"> {{status}}  </h4>
+                    {{/if}}
+                </div>
+            </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        Filter Date:
+                        <input autocomplete="off" type="date" id="rangeone" name="rangeone" value="{{dateOne}}"  data-date-format="YYYY/MM/DD" />
+                        To 
+                        <input autocomplete="off" type="date" id="rangetwo" name="rangetwo" value="{{dateTwo}}" data-date-format="YYYY/MM/DD" />
+                        <input type="button" value="Submit" class="btn-primary" onclick="datePickerSubmit()">
+                        <br><br>
+                        <table id="dataTables" name="dataTables" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="centerTable otherBG" rowspan="2">Dept</th>
+                                    <th class="centerTable blueBG" colspan="{{inc dataPersetujuan.length}}">Terbit Baru</th>
+                                    <th class="centerTable greenBG" colspan="{{inc dataPersetujuan.length}}">Selesai</th>
+                                    <th class="centerTable otherBG" rowspan="2">Percent</th>
+                                </tr>
+                                <tr>
+                                    {{#each dataPersetujuan}}
+
+                                    <th class="centerTable blueBG" >{{this.alias_permasalahan}}</th>
+                                    {{/each}}
+                                    <th class="centerTable blueBG" >Total</th>
+
+
+                                    {{#each dataPersetujuan}}
+                                    <th class="centerTable greenBG" >{{this.alias_permasalahan}}</th>
+                                    {{/each}}
+                                    <th class="centerTable greenBG" >Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="centerTable" >
+                                {{#each dataDept}}
+                                <tr>
+                                    <td class="otherBG">{{this.kode_department}}</td>
+
+                                    <td class="blueBG">0</td>
+                                    <td class="blueBG">0</td>
+                                    <td class="blueBG">0</td>
+                                    <td class="blueBG">0</td>
+
+                                    <td class="greenBG">0</td>
+                                    <td class="greenBG">0</td>
+                                    <td class="greenBG">0</td>
+                                    <td class="greenBG">0</td>
+                                    
+                                    <td class="otherBG">0%</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{{#section 'custom_script'}}
+<script>
+ 
+    function datePickerSubmit(){
+        var one = $("#rangeone").val();
+        var two = $("#rangetwo").val();
+        one = one.replaceAll(/-/g, ' ');
+        two = two.replaceAll(/-/g, ' ');
+        var res = one + "-" + two;
+        //alert("rangeone = " + one);
+        //alert("rangetwo = " + two);
+        //alert("resdata = " + res);
+
+         window.location.href = '/epicaListReport/'+res;
+    }
+
+    $("#epicaPicker").on("click", function(){
+        var dateRange = $("#picaDateFilter").val();
+        window.location.href = '/epicaListReport/'+dateRange;
+    });
+   
+    $(function() {
+        $('input[name="picaDateFilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Cancel',
+                format: 'DD MMM YYYY'
+            }
+        });
+        $('input[name="picaDateFilter"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD MMM YYYY') + ' - ' + picker.endDate.format('DD MMM YYYY'));
+            
+            //auto click after apply
+            var dateRange = $("#picaDateFilter").val();
+            window.location.href = '/epicaListReport/'+dateRange;
+        });
+        $('input[name="picaDateFilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            //$(this).val('');
+            //window.location="/epicaList";
+        });
+    });
+    function monthConvert(month){
+        if (month == "01") {
+            return "Jan";
+        } else if (month == "02") {
+            return "Feb";
+        } else if (month == "03") {
+            return "Mar";
+        } else if (month == "04") {
+            return "Apr";
+        } else if (month == "05") {
+            return "May";
+        } else if (month == "06") {
+            return "Jun";
+        } else if (month == "07") {
+            return "Jul";
+        } else if (month == "08") {
+            return "Aug";
+        } else if (month == "09") {
+            return "Sep";
+        } else if (month == "10") {
+            return "Oct";
+        } else if (month == "11") {
+            return "Nov";
+        } else if (month == "12") {
+            return "Dec";
+        }
+    }
+    function colspan(){
+        let col = {{dataPersetujuan.length}};
+        col = col + 1;
+        return col
+    }
+    $( document ).ready(function() {
+        var dataPica = {{{dataPicaJSON}}} ;
+        var dataDept = {{{dataDeptJSON}}} ;
+        var dataPers = {{{dataPersJSON}}} ;
+        var tablee = document.getElementById('dataTables');
+
+        //inserting data
+        for (let i = 0; i< dataPica.length; i++) {
+            for (let j = 0; j < dataDept.length; j++) {
+                for (let k = 0; k < dataPers.length; k++) {
+                    if ((dataPica[i].department_id == dataDept[j].id) && (dataPica[i].persetujuan_id == dataPers[k].id)){
+                        let debugStr = "EPICA " + dataDept[j].kode_department + " " + dataPers[k].alias_permasalahan;
+                        let done = 0;
+                        if (dataPica[i].pica_status_id == 5){
+                            done = dataPers.length + 1;
+                            debugStr += " Done";
+                        } else {
+                            debugStr += " Not Done";
+                        }
+                        //console.log(debugStr); debug if necessary
+                        let bucket = parseInt(tablee.rows[j+2].cells[k+1+done].innerHTML);
+                        bucket += 1;
+                        tablee.rows[j+2].cells[k+1+done].innerHTML = bucket;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //counting total
+        for (let i= 0; i< dataDept.length; i++) {
+            let addition = 0; let additionDone = 0
+            for (let j = 0; j< dataPers.length; j++){
+                addition += parseInt(tablee.rows[i+2].cells[j+1].innerHTML);
+                additionDone += parseInt(tablee.rows[i+2].cells[4+j+1].innerHTML);
+            }
+            tablee.rows[i+2].cells[dataPers.length+1].innerHTML = addition;
+            tablee.rows[i+2].cells[dataPers.length + 1 + dataPers.length+1].innerHTML = additionDone;
+        }
+
+        //making percentage
+        for (let i= 0; i< dataDept.length; i++) {
+            let totalLeft = parseFloat(tablee.rows[i+2].cells[dataPers.length+1].innerHTML);
+            let totalRight = parseFloat(tablee.rows[i+2].cells[dataPers.length + 1 + dataPers.length+1].innerHTML);
+            let totalAll = parseFloat(totalLeft + totalRight);
+            let percentage = parseInt(totalRight / totalAll * 100);
+            if (totalAll == "0"){
+                percentage = 0;
+            } 
+            //write percentage
+            tablee.rows[i+2].cells[dataPers.length + 1 + dataPers.length + 1 + 1].innerHTML = percentage + "%";
+        }
+
+    });
+</script>
+{{/section}}

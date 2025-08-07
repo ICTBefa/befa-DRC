@@ -1,0 +1,66 @@
+<script type="text/javascript" src="/assets/dist/css/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="/node_modules/Datatables/DataTables-1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/node_modules/Datatables/Buttons-1.7.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="/node_modules/Datatables/JSZip-2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src="/node_modules/Datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="/node_modules/Datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="/node_modules/Datatables/Buttons-1.7.0/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="/node_modules/Datatables/Buttons-1.7.0/js/buttons.print.min.js"></script>
+<link href="/assets/dist/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/node_modules/Datatables/Buttons-1.7.0/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
+
+<table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Garrett Winters</td>
+                <td>Accountant</td>
+                <td>Tokyo</td>
+                <td>63</td>
+                <td>2011/07/25</td>
+                <td>$170,750</td>
+            </tr>
+    </tbody>
+    </table>
+
+{{#section 'custom_script'}}
+    <script>
+        $(document).ready(function() {
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+    </script>
+{{/section}}

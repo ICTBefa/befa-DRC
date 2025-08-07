@@ -1,0 +1,211 @@
+<style>
+
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+input[type=text] {
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff; 
+  border-bottom: 1px solid #d4d4d4; 
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #e9e9e9; 
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
+}
+</style>
+<body>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/epicaList" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 id="titletxt" class="m-0 text-dark">Revisi Deskripsi Pica</h1>
+                </div>
+            </div>    
+            <div class="row justify-content-center" id="emptyStuff">
+                <div class="col-lg-11" style="margin-top: 1px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/assets/dist/img/logo.png"
+                                class="rounded" alt="logo">
+                                <p class="font-weight-bold" style="margin-top: 50px; ">FORM PROBLEM IDENTIFICATION & CORRECTIVE ACTION</p>
+                            </div>
+
+                            <form id="tindakanForm" name="tindakanForm" method="post" action="/RevisiPicaAuditor">
+                                <div class="form-group row">
+                                    <div class="col-sm-1">No : </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-check-input" type="hidden" name="no_pica" id="no_pica" value="">
+                                        <p id="no_pica_text"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-1">Bagian : </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-check-input" type="hidden" name="dept_id" id="dept_id" value="">
+                                        <p id="dept_id_text"></p>
+                                    </div>
+                                </div>
+                                <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                                    <div class="col-sm-9">
+                                        {{#each dataPersetujuan}}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" required>
+                                                <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                    {{#if data.persetujuan_text}}
+                                    <div class="col-sm-12" id="divInputText" style="">
+                                    Keluhan Dari : <input autocomplete="off" class="" style="width:50%" type="text" name="input_text" id="input_text" value="{{data.persetujuan_text}}">
+                                    <br>
+                                    </div>
+                                    {{else}}
+                                    <input autocomplete="off" class="" style="width:50%" type="hidden" name="input_text" id="input_text" value="">
+                                    {{/if}}
+                                </div>
+
+                                <div class="card">
+                                    <div id="desc" class="border border-dark">
+                                        <div style="margin: 10px;">
+                                            <label for="desclabel">Deskripsi Masalah/Potensial Masalah :</label>
+                                            <textarea id="deskripsi_masalah" name="deskripsi_masalah" required>{{data.deskripsi_masalah}}</textarea>
+                                            <div class="row justify-content-end">
+                                                <div class="col-sm-3 border border-dark">
+                                                    <p class="text-center">Pelaksana</p>
+                                                    <input class="form-check-input" type="hidden" name="pelaksana_id" id="pelaksana_id" value="" style="display:block; margin : 0 auto;">
+                                                    <p id="pelaksana_text" style="text-align:center"></p>
+                                                </div>
+                                                <div class="col-sm-3 border border-dark">
+                                                    <p class="text-center">Pengusul</p>
+                                                    <input class="form-check-input" type="hidden" name="pengusul_id" id="pengusul_id" value="" style="display:block; margin : 0 auto;">
+                                                    <p id="pengusul_text" style="text-align:center"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    
+                                </div>
+                                    <input type="hidden" name="pica_master_id" value="{{data.id}}">
+                                    
+                                    {{#if roleMatch}}
+                                    <input id="submitbtn" type="Submit" value="Submit" class="btn btn-primary float-right">
+                                    {{/if}}
+                            </form>
+                            
+                        </div>
+                    </div>
+                    
+                    <div id="alasanDiv">
+                        <br>
+                        <h4>Alasan Revisi:</h4>
+                        <br>
+                        {{{data.alasan_tolak_revisi}}}
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+                    
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{{#section 'custom_script'}}
+<script>
+    var dataUser={{{dataUserJSON}}}
+    
+    //$("#deskripsi_masalah").summernote('code');
+    var status="{{data.pica_status_id}}"
+    var masalah="{{data.alias_permasalahan}}"
+    var data="{{data.akar_masalah}}"
+    var dataPersetujuan={{{persetujuanJSON}}}
+    var no_pica="{{data.no_pica}}"
+    var dept_id="{{data.nama_department}}"
+    $(function(){
+        if (status == 7){
+            
+            $("#no_pica").val(no_pica);
+            $("#no_pica_text").text(no_pica);
+            $("#dept_id").val(dept_id);
+            $("#dept_id_text").text(dept_id);
+
+            var wow = $("#deskripsi_masalah").val();
+            tinymce.init({
+                selector: '#deskripsi_masalah',
+                height: 100,
+                menubar: false,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen autoresize',
+                    'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: 'undo redo | formatselect | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+            });
+            
+
+            $('input[name=persetujuan_id]').attr("disabled",true);
+            for (var i= 0; i < dataPersetujuan.length;i++ ) {
+                if (masalah == dataPersetujuan[i].alias_permasalahan )
+                    $("input[name=persetujuan_id][value=" + dataPersetujuan[i].id + "]").prop('checked', true);
+            }
+            
+            $("#pelaksana_id").val("{{data.pelaksana_user_id}}");
+            $("#pelaksana_text").text("{{data.pelaksana_fullname}}");
+            $("#pengusul_id").val("{{data.pengusul_user_id}}");
+            $("#pengusul_text").text("{{data.pengusul_fullname}}");
+                        
+        } else {
+            document.getElementById("emptyStuff").style.display = "none"; 
+            var div = document.getElementById("titletxt");
+            div.innerHTML="Isi dari EPICA telah berubah"
+        }
+    });
+</script>
+{{/section}}
+

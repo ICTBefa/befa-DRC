@@ -1,0 +1,207 @@
+<link href="/node_modules/summernote-0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="/node_modules/summernote-0.8.18/dist/summernote.min.js"></script>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Create EPICA</h1>
+                    {{#if dataEpicaMaster}}
+                        <h5 class="m-0 text-dark">Referensi Pica : {{dataEpicaMaster.no_pica}}</h5>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="justify-content-center">
+                <div class="col-lg-11" style="margin-top: 1px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/assets/dist/img/logo.png"
+                                class="rounded" alt="logo">
+                                <p class="font-weight-bold" style="margin-top: 50px; ">{{title}}</p>
+                            </div>
+
+                            <form id="deskripsiM" method="post" action="/CreateNewPica">
+                                <div class="form-group row">
+                                    <div class="col-sm-1">No : </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-check-input" type="hidden" name="no_pica" id="no_pica" value="">
+                                        <p id="no_pica_text"></p>
+                                    </div>
+                                </div>    
+                                <div class="form-group row">
+                                    <div class="col-sm-1" >Bagian : 
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select name="dept_id" class="form-control" required>
+                                        <option disabled selected value style="display:none"></option>
+                                        {{#each data}}
+                                        <option value="{{this.department_id}}"> {{this.nama_department}} </option>
+                                        {{/each}}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4"></div>
+                                </div>
+                                <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                                    <div class="col-sm-9">
+                                        {{#each dataPersetujuan}}
+
+                                            {{#if (eq this.id 3)}}
+                                                {{#if (eq ../countSMO 0)}}
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" disabled>
+                                                        <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                                    </div>
+                                                {{else}}
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" required>
+                                                        <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                                    </div>
+                                                {{/if}}
+                                            {{else}}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" required>
+                                                <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                            </div>
+                                            {{/if}}
+                                        {{/each}}
+                                        <input type="hidden" name="pstj_text" id="pstj_text" value="">
+                                    </div>
+                                    <div class="col-sm-12" id="divInputText" style="display:none">
+                                        Keluhan Dari : <input autocomplete="off" class="" style="width:50%" type="text" name="input_text" id="input_text" value="">
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="Desc">Deskripsi Masalah/Potensial Masalah :</label>
+                                            {{!-- <textarea class="form-control" id="Desc" name="Desc" rows="3"></textarea> --}}
+                                            <textarea id="deskripsi_masalah" name="deskripsi_masalah"></textarea>
+                                            
+                                        </div>
+                                        <div class="row justify-content-end">
+                                            <div class="col-sm-3 border border-dark">
+                                                <p class="text-center">Pelaksana</p>
+                                                <input class="form-check-input" type="hidden" name="pelaksana_id" id="pelaksana_id" value="" style="display:block; margin : 0 auto;">
+                                                <p id="pelaksana_text" style="text-align:center"></p>
+                                            </div>
+                                            <div class="col-sm-3 border border-dark">
+                                                <p class="text-center">Pengusul</p>
+                                                <input class="form-check-input" type="hidden" name="pengusul_id" id="pengusul_id" value="" style="display:block; margin : 0 auto;">
+                                                <p id="pengusul_text" style="text-align:center"></p>
+                                                <input class="form-check-input" type="hidden" name="pengusul_text_be" id="pengusul_text_be" value="">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <hr style="background-color:black; border:none; height:1px; margin:0px;">
+                                        <br>
+                                    </div>
+                                </div>
+                                {{#if dataEpicaMaster}}
+                                <input class="form-check-input" type="hidden" name="pica_ref_id" id="pica_ref_id" value="{{dataEpicaMaster.id}}" >
+                                {{else}}
+                                <input class="form-check-input" type="hidden" name="pica_ref_id" id="pica_ref_id" value="0" >
+                                {{/if}}
+                                <input type="hidden" name="kode_dept" id="kode_dept" value="" >
+
+                                {{#if roleMatch}}
+                                    <input type="submit" class="btn btn-primary float-right">
+                                {{/if}}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{{#section 'custom_script'}}
+<script>
+    var roleMatch = "{{roleMatch}}"
+    console.log("role match = " + roleMatch);
+    var status="{{status}}"
+    var picaNumber = "{{dataPicaNumber.pica_number}}"
+    var dataDept={{{deptJSON}}}
+    var data={{{userJSON}}}
+    var dataPstj={{{pstjJSON}}}
+    $(document).ready(function() {
+       $("select").change(function() {
+            var drop = $("select").val();
+            for (let i = 0; i < dataDept.length; i++){
+                if (drop == dataDept[i].department_id){
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yy = today.getFullYear();
+                    yy = yy.toString().substr(-2);
+
+                    today = dd + mm + yy;
+                    $("#kode_dept").val(dataDept[i].kode_department);
+                    $("#pelaksana_id").val(dataDept[i].head_user_id);
+                    $("#pelaksana_text").text(dataDept[i].head_fullname);
+                }
+            }
+        });
+    });
+    
+    $('input[type=radio][name=persetujuan_id]').change(function() {
+        for (let i = 0; i < dataPstj.length; i++){
+            if (dataPstj[i].id == this.value){
+                $("#pstj_text").val(dataPstj[i].untuk_permasalahan);
+                if (dataPstj[i].input_text == 1) {
+                    ShowDivInputText();
+                } else {
+                    HideDivInputText();
+                }
+            }
+        }
+    });
+
+    function ShowDivInputText(){
+        $("#divInputText").show();
+    }
+     
+    function HideDivInputText(){
+        $("#input_text").val("");
+        $("#divInputText").hide();
+    }
+    $(function(){
+        if (status == 1) {
+            $(document).ready(function() { 
+                
+                tinymce.init({
+                selector: '#deskripsi_masalah',
+                height: 100,
+                menubar: false,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen autoresize',
+                    'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: 'undo redo | formatselect | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                });
+                //$('#deskripsi_masalah')
+            });
+        $("#pengusul_id").val("{{dataUser2.user_id}}");
+        $("#pengusul_text").text("{{dataUser2.fullname}}");
+        $("#pengusul_text_be").val("{{dataUser2.fullname}}");
+        }
+    });
+
+    function pad_with_zeroes(number, length) {
+        var my_string = '' + number;
+        while (my_string.length < length) {
+            my_string = '0' + my_string;
+        }
+        return my_string;
+    }
+</script>
+{{/section}}

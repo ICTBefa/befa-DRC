@@ -1,0 +1,138 @@
+<div class="hold-transition login-page">
+    {{#if dbStatus.local.error}}
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h5><i class="icon fas fa-ban"></i> Error!</h5>
+        {{dbStatus.local.message}}
+    </div>
+    {{/if}}
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="/assets/dist/img/logo.png"
+                    class="rounded" alt="logo">
+            <p>BeFa E-Test</p>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <form action="/loginValidation" method="post">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Username" name="email" autocomplete="off">
+                        <div class="input-group-append">
+                            <div class="input-group-text"><span class="fas fa-user"></span></div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" placeholder="Password" name="password">
+                        <div class="input-group-append">
+                            <div class="input-group-text"><span class="fas fa-lock"></span></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {{#if data}}
+                        <p>
+                            <font color="red">{{data.message}}</font>
+                        </p>
+                        {{/if}}
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{{#section 'custom_script'}}
+    <script>
+        $(function() {
+            $('#frm-import').validate({
+                rules: {
+                    username: {required: true},
+                    password: {required: true},
+                    event: {required: true},
+                },
+                messages: {
+                    username: {required: 'Please enter your username'},
+                    password: {required: 'Please enter your password'},
+                    event: {required: 'Please choose event'},
+                },
+                errorElement: 'span',
+                errorPlacement: (error, element) => {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: (element, errorClass, validClass) => {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: (element, errorClass, validClass) => {
+                    $(element).removeClass('is-invalid');
+                },
+                submitHandler: (form, event) => {
+                    event.preventDefault();
+
+                    $('#alert-import').hide();
+
+                    Swal.fire({
+                        type: 'warning',
+                        html: 'This process will erase your existing data.<br>Do you want to continue?',
+                        showCancelButton: true,
+                        cancelButtonColor: '#D33',
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            let $form = $(form);
+                            let url = $form.attr('action');
+                            let postData = {
+                                username: $form.find("input[name='username']").val(),
+                                password: $form.find("input[name='password']").val(),
+                                eventId: $form.find("select[name='event']").val()
+                            };
+
+                            $.ajax({
+                                type: 'POST',
+                                url: url,
+                                data: postData,
+                                beforeSend: function() {
+                                    $('#import-overlay').show();
+                                },
+                                success: function(data) {
+                                    let className = 'alert-danger';
+                                    let title = '<i class="icon fas fa-ban"></i> Error!';
+                                    let msg = data.message;
+
+                                    if (data.status === 1) {
+                                        className = 'alert-success';
+                                        title = '<i class="icon fas fa-check"></i> Success!';
+                                    }
+
+                                    $('#alert-title-import').html(title);
+                                    $('#alert-body-import').html(msg);
+                                    $('#alert-import').removeClass('alert-danger alert-success').addClass(className).show();
+                                },
+                                complete: function() {
+                                    $('#import-overlay').attr('style', 'display: none!important; flex-direction: column;');
+                                }
+                            });
+                        }
+                    });
+                },
+            });
+
+            $('#modal-import-data').on('hidden.bs.modal', (e) => {
+                $('#alert-import').hide();
+                $(this)
+                    .find('input, textarea, select').val('').end()
+                    .find('input[type=checkbox], input[type=radio]').prop('checked', '').end();
+                $('.is-invalid').removeClass('is-invalid');
+            });
+
+            $('#modal-import-data').on('shown.bs.modal', () => {
+                $('#import-username').trigger('focus');
+            });
+        });
+    </script>
+{{/section}}

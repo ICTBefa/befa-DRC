@@ -1,0 +1,75 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b> {{title}} </b> </h1>
+                    {{#if status}}
+                    <h4 class="m-0 text-{{statusColor}}"> {{status}}  </h4>
+                    {{/if}}
+                </div>
+            </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <a href="/dpmtMemberCreate" class="btn btn-primary"> Tambah Divisi Member</a>
+                        <table id="dataTables" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kode Divisi</th>
+                                    <th>Nama Divisi</th>
+                                    {{#each dataRole}}
+                                    <th> {{this.role_name}} </th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataDepartment}}
+                                <tr>
+                                    <td>{{inc @index}}</td>
+                                    <td>{{this.kode_department}}</td>
+                                    <td>{{this.nama_department}}</td>
+                                    {{#each ../dataRole}}
+                                    <td> 
+                                        {{#each ../../dataDpmtMember}} 
+                                            {{#if_equal ../../this.kode_department this.kode_department}}
+                                                {{#if_equal ../this.id this.department_roles_id}}
+                                                   <a title="edit" href="/dpmtMemberEdit/{{this.id}}"> <i class="far fa-user">{{this.email}}</i> &nbsp; </a>
+                                                {{/if_equal}}
+                                            {{/if_equal}}
+                                        {{/each}}
+                                    </td>
+                                    {{/each}}
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

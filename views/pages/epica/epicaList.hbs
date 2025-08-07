@@ -1,0 +1,472 @@
+
+<style> 
+    table td {
+        max-width: 350px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        overflow: hidden;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b> {{title}} </b> </h1>
+                    {{#if status}}
+                    <h4 class="m-0 text-{{statusColor}}"> {{status}}  </h4>
+                    {{/if}}
+                </div>
+            </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <h6><input type="button" value="Report" class="btn-primary" onclick="reportInit()"> EPICA Filter Date 
+                            {{#if dataRange}}
+                            <input autocomplete="off" type="text" id="picaDateFilter" name="picaDateFilter" value="{{dataRange}}" /> 
+                            {{else}}
+                            <input autocomplete="off" type="text" id="picaDateFilter" name="picaDateFilter" value="" /> 
+                            {{/if}}
+                            <input type="hidden" id="epicaPicker" name="epicaPicker" class="btn-sm btn-primary" value="Go" /> 
+                            <br><br>
+                            <p id="filterby" style="margin:5px"></p>
+                            {{#each dataEpicaStatus}}
+                                {{#if (eq this.id 6)}}
+
+                                {{else if (eq this.id 8)}}
+
+                                {{else if (eq this.id 9)}}
+
+                                {{else if (eq this.id 10)}}
+
+                                {{else if (eq this.id 11)}}
+
+                                {{else if (eq this.id 7)}}
+
+                                <input style="background-color:{{this.color}} !important; color:black !important; border-color:{{this.color}} !important" class="btn-primary" type="button" value="Perlu Revisi" onclick="filter('27','Revisi','Perlu Revisi')">
+                                {{else}}
+                                <input style="background-color:{{this.color}} !important; color:black !important; border-color:{{this.color}} !important" class="btn-primary" type="button" value="{{this.button_name}}" onclick="filter('27','{{this.status_name}}','{{this.button_name}}')">
+                                {{/if}}
+                            {{/each}}
+                            <input type="button" value="Reset" class="btn-secondary" onclick="filter('27','','')">
+                            <p style="margin:5px"></p>
+                            {{#each dataPersetujuan}}
+                                <input type="button" value="{{this.untuk_permasalahan}}" class="btn-primary" onclick="filter('1','{{this.alias_permasalahan}}','{{this.untuk_permasalahan}}')">
+                            {{/each}}
+                                <input type="button" value="Reset" class="btn-secondary" onclick="filter('1','','')">
+                            <p style="margin:5px"></p>
+                            {{#each dataDept}}
+                                <input type="button" value="{{this.kode_department}}" class="btn-warning" onclick="filter('5','{{this.kode_department}}','{{this.kode_department}}')">
+                            {{/each}}
+                                <input type="button" value="Reset" class="btn-secondary" onclick="filter('5','','')">
+                            </h6> 
+                        <table id="dataTables" class="table table-bordered table-hover">
+                            <thead>
+                                <tr align="center">
+                                    <th colspan="4" scope='colgroup'></th>
+                                    <th colspan="2" scope='colgroup'>Pelaksana EPICA</th>
+                                    <th colspan="2" scope='colgroup'></th>
+                                    <th colspan="3" scope='colgroup'>Tindakan 1</th>
+                                    <th colspan="3" scope='colgroup'>Tindakan 2</th>
+                                    <th colspan="3" scope='colgroup'>Tindakan 3</th>
+                                    <th colspan="3" scope='colgroup'>Verifikasi 1</th>
+                                    <th colspan="3" scope='colgroup'>Verifikasi 2</th>
+                                    <th colspan="3" scope='colgroup'>Verifikasi 3</th>
+                                    
+                                    {{#if dataAllowedHidden}}
+                                    <th colspan="4" scope='colgroup'></th>
+                                    {{else}}
+                                    <th colspan="3" scope='colgroup'></th>
+                                    {{/if}}
+                                </tr>
+                                <tr>
+                                    <th scope='col'>No</th>
+                                    <th scope='col'>Sumber EPICA</th>
+                                    <th scope='col'>No EPICA</th>
+                                    <th scope='col'>Pengusul</th>
+                                    <th scope='col'>Nama</th>
+                                    <th scope='col'>Dept</th>
+                                    <th scope='col'>Deskripsi Masalah</th>
+                                    <th scope='col'>Tgl Buka</th>
+                                    <th scope='col'>Tindakan Koreksi</th>
+                                    <th scope='col'>PIC</th>
+                                    <th scope='col'>Batas Waktu</th>
+                                    <th scope='col'>Tindakan Koreksi</th>
+                                    <th scope='col'>PIC</th>
+                                    <th scope='col'>Batas Waktu</th>
+                                    <th scope='col'>Tindakan Koreksi</th>
+                                    <th scope='col'>PIC</th>
+                                    <th scope='col'>Batas Waktu</th>
+                                    <th scope='col'>Tgl Rencana</th>
+                                    <th scope='col'>Tgl Actual</th>
+                                    <th scope='col'>Pelaksana</th>
+                                    <th scope='col'>Tgl Rencana</th>
+                                    <th scope='col'>Tgl Actual</th>
+                                    <th scope='col'>Pelaksana</th>
+                                    <th scope='col'>Tgl Rencana</th>
+                                    <th scope='col'>Tgl Actual</th>
+                                    <th scope='col'>Pelaksana</th>
+                                    <th scope='col'>Tgl Tutup</th>
+                                    <th scope='col'>Status</th>
+                                    <th scope='col'>Dari/Ke EPICA</th>
+                                    {{#if dataAllowedHidden}}
+                                    <th scope='col'>Hide EPICA</th>
+                                    {{/if}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataEpicaMaster}}
+                                <tr bgcolor="{{this.color}}">
+                                    <td>{{inc @index}}</td>
+                                    <td>{{this.alias_permasalahan}}</td>
+                                    {{#if (eq this.pica_status_id 1)}}
+                                        <!-- belum diverifikasi, akan ada di sini ta[pi belum ada nomor -->
+                                        <td><a href="/epicaStatusFive/{{this.id}}" >belum disetujui</a></td> 
+                                    {{else if (eq this.pica_status_id 2)}}
+                                        <!-- display deskripsi, bisa add akar masalah & Tindakan Koreksi -->
+                                        <td><a href="/epicaStatusTwo/{{this.id}}" >{{this.no_pica}}</a></td>
+                                    {{else if (eq this.pica_status_id 6)}}
+                                        <!-- display deskripsi, bisa edit akar masalah & Tindakan Koreksi -> kena revisi dari Head-->
+                                        <td><a href="/epicaStatusSix/{{this.id}}" >{{this.no_pica}}</a></td>
+                                    {{else if (eq this.pica_status_id 3)}}
+                                        <!-- display deskripsi + akar masalah + Tindakan Koreksi, bisa add verfikasi | status belum ada verifikasi-->
+                                        <td><a href="/epicaStatusThree/{{this.id}}" >{{this.no_pica}}</a></td>
+                                    {{else if (eq this.pica_status_id 4)}}
+                                        <!-- display deskripsi + akar masalah + Tindakan Koreksi + verifikasi, bisa add verfikasi, bisa add new pica | status OPEN -->
+                                        <td><a href="/epicaStatusFour/{{this.id}}" >{{this.no_pica}}</a></td>
+                                    {{else if (eq this.pica_status_id 5)}}
+                                        <!-- display deskripsi + akar masalah + Tindakan Koreksi + verifikasi, tidak bisa add apapun | status CLOSED-->
+                                        <td><a href="/epicaStatusFive/{{this.id}}" >{{this.no_pica}}</a></td>
+                                    {{else if (eq this.pica_status_id 7)}}
+                                        <!-- display Status Seven -> Rejected by persetujuan and need revision -->
+                                        <td><a href="/epicaStatusSeven/{{this.id}}" >Belum ada nomor</a></td>
+                                    {{else if (eq this.pica_status_id 8)}}
+                                        <!-- display Status Eight -> Same as status 4, BUT can be edited by auditor(to status 5) OR pic(to status 9) -->
+                                        <td>
+                                            {{#if (eq ../dataRoles.[0].role_id 3)}}
+                                            <a href="/epicaStatusFour/{{this.id}}" >{{this.no_pica}}</a>
+                                            {{else if (eq ../dataRoles.[0].role_id 2)}}
+                                            <a href="/epicaStatusSix/{{this.id}}" >{{this.no_pica}}</a>
+                                            {{else if (eq ../dataRoles.[0].role_id 1)}}
+                                            <a href="/epicaStatusSix/{{this.id}}" >{{this.no_pica}}</a>
+                                            {{/if}}
+                                        </td> 
+                                    {{else if (eq this.pica_status_id 9)}}
+                                        <!-- display Status Nine -> only view, need to be accepted by persetujuan -->
+                                        <td><a href="/epicaStatusFive/{{this.id}}" >menunggu persetujuan</a></td>
+                                    {{else if (eq this.pica_status_id 10)}}
+                                        <!-- display Status Ten -> only view need to be accepted by head -->
+                                        <td><a href="/epicaStatusThree/{{this.id}}" >{{this.no_pica}}</a></td>
+                                    {{else if (eq this.pica_status_id 11)}}
+                                        <!-- display deskripsi, bisa edit akar masalah & Tindakan Koreksi -> kena revisi dari Head/persetujuan-->
+                                        <td><a href="/epicaStatusSix/{{this.id}}" >{{this.no_pica}}</a></td>
+                                    {{else}}
+                                        <td>(status error) {{this.no_pica}}</td>
+                                    {{/if}}
+                                    <td>
+                                        {{#if (eq this.pengusul_user_id 0)}}
+                                            {{this.pengusul_text}}
+                                        {{else}}
+                                             {{this.pengusul_fullname}}
+                                        {{/if}}
+                                    </td>
+                                    <td>
+                                        {{#if (eq this.pelaksana_user_id 0)}}
+                                            {{this.pelaksana_text}}
+                                        {{else}}
+                                             {{this.pelaksana_fullname}}
+                                        {{/if}}
+                                    </td>
+                                    <td>{{this.kode_department}}</td>
+                                    <td>{{{removeBr this.deskripsi_masalah}}}</td>
+                                    <td>{{this.tanggal_buka}}</td>
+                                    {{#each ../dataEpicaDetails}}
+                                        {{#if_equal ../this.id this.pica_master_id}}
+                                            {{#if_equal this.urutan_tindakan "1"}}
+                                                <td>{{{removeBr this.tindakan_koreksi}}}</td>
+                                                <td>
+                                                    {{#if (eq this.pic_user_id 0)}}
+                                                        {{this.pic_text}}
+                                                    {{else}}
+                                                        {{this.fullname}}
+                                                    {{/if}}
+                                                </td>
+                                                <td>{{this.batas_waktu}}</td>
+                                            {{/if_equal}}
+                                            {{#if_equal this.urutan_tindakan "2"}}
+                                                <td>{{{removeBr this.tindakan_koreksi}}}</td>
+                                                <td>
+                                                    {{#if (eq this.pic_user_id 0)}}
+                                                        {{this.pic_text}}
+                                                    {{else}}
+                                                        {{this.fullname}}
+                                                    {{/if}}
+                                                </td>
+                                                <td>{{this.batas_waktu}}</td>
+                                            {{/if_equal}}
+                                            {{#if_equal this.urutan_tindakan "3"}}
+                                                <td>{{{removeBr this.tindakan_koreksi}}}</td>
+                                                <td>
+                                                    {{#if (eq this.pic_user_id 0)}}
+                                                        {{this.pic_text}}
+                                                    {{else}}
+                                                        {{this.fullname}}
+                                                    {{/if}}
+                                                </td>
+                                                <td>{{this.batas_waktu}}</td>
+                                            {{/if_equal}}
+                                        {{/if_equal}}
+                                    {{/each}}
+                                    
+                                    {{#times this.details_loop}}
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    {{/times}}
+
+                                    {{#each ../dataEpicaVerifikasi}}
+                                        {{#if_equal ../this.id this.pica_master_id}}
+                                            {{#if_equal this.verifikasi_no "1"}}
+                                                <td>{{this.tanggal_rencana}}</td>
+                                                <td>{{this.tanggal_actual}}</td>
+                                                <td>
+                                                    {{#if (eq this.verified_by_user_id 0)}}
+                                                        {{this.pelaksana_text}}
+                                                    {{else}}
+                                                        {{this.fullname}}
+                                                    {{/if}}
+                                                </td>
+                                            {{/if_equal}}
+                                            {{#if_equal this.verifikasi_no "2"}}
+                                                <td>{{this.tanggal_rencana}}</td>
+                                                <td>{{this.tanggal_actual}}</td>
+                                                <td>
+                                                    {{#if (eq this.verified_by_user_id 0)}}
+                                                        {{this.pelaksana_text}}
+                                                    {{else}}
+                                                        {{this.fullname}}
+                                                    {{/if}}
+                                                </td>
+                                            {{/if_equal}}
+                                            {{#if_equal this.verifikasi_no "3"}}
+                                                <td>{{this.tanggal_rencana}}</td>
+                                                <td>{{this.tanggal_actual}}</td>
+                                                <td>
+                                                    {{#if (eq this.verified_by_user_id 0)}}
+                                                        {{this.pelaksana_text}}
+                                                    {{else}}
+                                                        {{this.fullname}}
+                                                    {{/if}}
+                                                </td>
+                                            {{/if_equal}}
+                                        {{/if_equal}}
+                                    {{/each}}
+
+                                    {{#times this.verifikasi_loop}}
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    {{/times}}
+
+                                    <td>{{this.tanggal_tutup}}</td>
+                                    <td>{{this.status_name}}</td>
+                                    <td>
+                                    {{#if this.pica_reference_text}}
+                                        {{this.pica_reference_text}}
+                                    {{else}}
+                                        {{#if_equal this.pica_reference_id "0"}}
+                                        -
+                                        {{else}}
+                                            {{#if this.no_pica_reference}}
+                                            <a href="/epicaStatusFive/{{this.pica_reference_id}}">{{this.no_pica_reference}}</a>
+                                            {{else}}
+                                            (belum disetujui)
+                                            {{/if}}
+                                        {{/if_equal}}
+                                        / 
+                                        {{#if_equal this.pica_reference_to_id "0"}}
+                                        -
+                                        {{else}}
+                                            {{#if this.no_pica_reference_to}}
+                                            <a href="/epicaStatusFive/{{this.pica_reference_to_id}}">{{this.no_pica_reference_to}}</a>
+                                            {{else}}
+                                            (belum disetujui)
+                                            {{/if}}
+                                        {{/if_equal}}
+                                        </td>
+                                        
+                                    {{/if}}
+                                    {{#if ../dataAllowedHidden}}
+                                        <td><a href="/hidePica/{{this.id}}">Hide EPICA</a></td>
+                                    {{/if}}
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{{#section 'custom_script'}}
+    <script>
+    var picaFilter = "{{{dataFilter}}}";
+    var table = $('#dataTables').DataTable({
+    "paging": true,
+    "lengthChange": false,
+    "searching": true,
+    "ordering": true,
+    "autoWidth": false,
+    "pageLength": 25,
+    "scrollX": true,
+
+    });
+
+    var cola = "";
+    var colb = "";
+    var colc = "";
+    function filter(col,value,title){
+        table.columns(col).search(value).draw();
+
+        if (col == 27) {
+            //col status
+            cola = title;
+        } else if (col == 1) {
+            //col type
+            colb = title;
+        } else if (col == 5) {
+            //col dept
+            colc = title;
+        }
+        parseText();
+    }
+
+    function reportInit(){
+        
+        let today = new Date();
+
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); 
+        mm = monthConvert(mm);
+        let yyyy = today.getFullYear();
+
+        today = dd + ' ' + mm + ' ' + yyyy;
+        
+        var todayMinus = new Date();
+        todayMinus.setDate(todayMinus.getDate()-30);
+
+        let dd2 = String(todayMinus.getDate()).padStart(2, '0');
+        let mm2 = String(todayMinus.getMonth() + 1).padStart(2, '0');
+        mm2 = monthConvert(mm2);
+        let yyyy2 = todayMinus.getFullYear();
+
+        todayMinus = dd2 + ' ' + mm2 + ' ' + yyyy2;
+
+        let dates = todayMinus + " - " + today;
+
+        window.location.href = "/epicaListReport/" + dates;
+    }
+
+    function monthConvert(month){
+        if (month == "01") {
+            return "Jan";
+        } else if (month == "02") {
+            return "Feb";
+        } else if (month == "03") {
+            return "Mar";
+        } else if (month == "04") {
+            return "Apr";
+        } else if (month == "05") {
+            return "May";
+        } else if (month == "06") {
+            return "Jun";
+        } else if (month == "07") {
+            return "Jul";
+        } else if (month == "08") {
+            return "Aug";
+        } else if (month == "09") {
+            return "Sep";
+        } else if (month == "10") {
+            return "Oct";
+        } else if (month == "11") {
+            return "Nov";
+        } else if (month == "12") {
+            return "Dec";
+        }
+    }
+
+    function parseText(){
+        let counts = 0;
+        let strcount = "Filtered by: ";
+        if (cola != ""){
+            counts += 1;
+        }
+        if (colb != ""){
+            counts += 1;
+        }
+        if (colc != ""){
+            counts += 1;
+        }
+        //calculate
+        if (counts == 0){
+            strcount = "";
+        } else if (counts == 1){
+            strcount += cola + colb + colc;
+        } else if (counts == 2){
+            if (cola == ""){
+                strcount += colb + " | " +  colc;
+            } else {
+                strcount += cola + " | " +  colb + colc;
+            }
+        } else if (counts == 3){
+            strcount += cola + " | " + colb + " | " +  colc;
+        } else {
+            //error
+        }
+        $("#filterby").text(strcount);
+    }
+
+    $("#epicaPicker").on("click", function(){
+        var dateRange = $("#picaDateFilter").val();
+        window.location.href = '/epicaList/'+dateRange;
+    });
+   
+    $(function() {
+        $('input[name="picaDateFilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Cancel',
+                format: 'DD MMM YYYY'
+            }
+        });
+        $('input[name="picaDateFilter"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD MMM YYYY') + ' - ' + picker.endDate.format('DD MMM YYYY'));
+            
+            //auto click after apply
+            var dateRange = $("#picaDateFilter").val();
+            window.location.href = '/epicaList/'+dateRange;
+        });
+        $('input[name="picaDateFilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            //$(this).val('');
+            window.location="/epicaList";
+        });
+    });
+
+    $( document ).ready(function() {
+        if (picaFilter){
+            table.columns(2).search(picaFilter).draw();
+        }
+    });
+    </script>
+{{/section}}

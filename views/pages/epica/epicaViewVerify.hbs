@@ -1,0 +1,106 @@
+<link href="/node_modules/summernote-0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="/node_modules/summernote-0.8.18/dist/summernote.min.js"></script>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Create EPICA</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-11" style="margin-top: 1px;">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center">
+                    <img src="/assets/dist/img/logo.png"
+                    class="rounded" alt="logo">
+                    <p class="font-weight-bold" style="margin-top: 50px; ">FORM PROBLEM IDENTIFICATION & CORRECTIVE ACTION</p>
+                </div>
+
+                <form id="deskripsiM">
+                    <div>No :  <span id="Nomor" class="highlight">{{data.no_pica}}</span></div>
+                    <div>Bagian :  <span class="highlight">{{data.nama_department}}</span></div>
+                    <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                        <div class="col-sm-9">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ketidaksesuaian" id="inlineRadio1" value="1">
+                                <label class="form-check-label" for="inlineRadio1">Audit Mutu</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ketidaksesuaian" id="inlineRadio2" value="2">
+                                <label class="form-check-label" for="inlineRadio2">Temuan Ketidaksesuaian</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ketidaksesuaian" id="inlineRadio3" value="3">
+                                <label class="form-check-label" for="inlineRadio3">Keluhan Pelanggan</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                {{!-- <label for="Desc">Deskripsi Masalah/Potensial Masalah :</label>
+                                <textarea class="form-control" id="Desc" name="Desc" rows="3"></textarea> --}}
+                                <textarea id="summernote" name="editordata">{{data.deskripsi_masalah}}</textarea>
+                                
+                            </div>
+                            <div class="row justify-content-end">
+                                <div class="col-6 col-sm-3 border border-dark">
+                                <p class="text-center">Pelaksana</p>
+                                <p></p>
+                                </div>
+                                <div class="col-6 col-sm-3 border border-dark">
+                                <p class="text-center">Pengusul</p>
+                                <p></p>
+                                </div>
+                            </div>
+                            <div id="akar"></div>
+                            <div id="tabel"></div>
+                            <br>
+                            <br>
+                            <hr style="background-color:black; border:none; height:1px; margin:0px;">
+                            <br>
+                            <div id="verifikasi"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary float-right">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{{#section 'custom_script'}}
+<script>
+    var status="{{status}}"
+    $(function(){
+        if (status == 1) {
+            $("#deskripsiM :input").prop("disabled", true);
+            $("#summernote").summernote('disable');
+            $("#akar").load("/akar");
+        } if (status == 2 ){
+            $("#akar").load("/akar");
+            $("#tabel").load("/tabel");
+        } if (status == 3 ){
+            $("#akar").load("/akar");
+            $("#tabel").load("/tabel");
+            $("#verifikasi").load("/verifikasi");
+        }
+    }),
+    $(document).ready(function() {
+        $('#summernote').summernote();
+    });
+</script>
+
+{{/section}}

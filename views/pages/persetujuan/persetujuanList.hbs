@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b> {{title}} </b> </h1>
+                    {{#if status}}
+                    <h4 class="m-0 text-{{statusColor}}"> {{status}}  </h4>
+                    {{/if}}
+                </div>
+            </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <a href="/persetujuanCreate" class="btn btn-primary"> Tambah Group Persetujuan</a>
+                        <a href="/epicaListHidden" class="btn btn-primary"> ! </a>
+                        <table id="dataTables" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Group Persetujuan</th>
+                                    <th>Untuk Permasalahan</th>
+                                    <th>Alias Permasalahan</th>
+                                    <th>Input Text Persetujuan Group</th>
+                                    <th>Status Persetujuan Group</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each data}}
+                                <tr>
+                                    <td>{{inc @index}}</td>
+                                    <td>{{this.nama_group}}</td>
+                                    <td>{{this.untuk_permasalahan}}</td>
+                                    <td>{{this.alias_permasalahan}}</td>
+                                    {{#if this.input_text}}
+                                            <td>Perlu</td>
+                                    {{else}}
+                                            <td>Tidak Perlu</td>
+                                    {{/if}}
+                                    {{#if this.active}}
+                                            <td>Aktif</td>
+                                    {{else}}
+                                            <td>Tidak Aktif</td>
+                                    {{/if}}
+                                    <td> 
+                                        <a title="edit" href="/persetujuanEdit/{{this.id}}" class="btn btn-warning"><i class="fa fa-edit" aria-hidden="true"></i></span></a>
+                                        <a title="ganti status aktif" href="/persetujuanDelete/{{this.id}}" class="btn btn-warning"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

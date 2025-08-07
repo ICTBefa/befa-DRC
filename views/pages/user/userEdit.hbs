@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/userList" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 class="m-0 text-dark"> <b>{{title}}</b></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                          <form action="/EditUser" method="post" role="form">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" name="username" placeholder="Enter username" required value="{{data.username}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">New Password</label>
+                                <input type="password" class="form-control" name="password" placeholder="Leave blank to keep password same">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control" name="email" placeholder="Enter email" required value="{{data.email}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="nik">NIK</label>
+                                <input type="text" class="form-control" name="nik" placeholder="Enter NIK" required value="{{data.nik}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="fullname">FullName</label>
+                                <input type="text" class="form-control" name="fullname" placeholder="Enter Fullname" required value="{{data.fullname}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Level Akses</label>
+                                <select name="levelAkses" class="form-control">
+                                {{#select data.level_akses_id}}
+                                {{#each dataLevelAkses}}
+                                    <option value="{{this.id}}"> {{this.level_akses_name}} </option>
+                                {{/each}}
+                                {{/select}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Company</label>
+                                <select name="company" class="form-control">
+                                {{#select data.company_id}}
+                                {{#each dataCompany}}
+                                    <option value="{{this.id}}"> {{this.company_name}} </option>
+                                {{/each}}
+                                {{/select}}
+                                </select>
+                                
+                            </div>
+                            <div class="form-group">
+                                <label>Status User</label>
+                                <select name="status" class="form-control">
+                                {{#select data.active}}
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                                {{/select}}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Lokasi</label>
+                                <select name="location" class="form-control">
+                                {{#select data.location_id}}
+                                {{#each dataLocation}}
+                                    <option value="{{this.id}}"> {{this.location_name}} </option>
+                                {{/each}}
+                                {{/select}}
+                                </select>
+                            </div>
+
+                            <input type="hidden" class="form-control" name="user_id" value="{{data.id}}">
+                            
+                            <input type="submit" class="btn btn-primary" ></input>
+                        </form>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

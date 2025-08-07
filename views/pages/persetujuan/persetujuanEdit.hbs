@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/persetujuanList" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 class="m-0 text-dark"> <b>{{title}}</b></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                          <form action="/EditPersetujuan" method="post" role="form">
+                            <div class="form-group">
+                                <label for="kode">Nama Group</label>
+                                <input type="text" class="form-control" name="nama_group" placeholder="Nama Group" required value="{{data.nama_group}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="nama">Untuk Permasalahan</label>
+                                <input type="text" class="form-control" name="untuk_permasalahan" placeholder="Untuk Permasalahan" required value="{{data.untuk_permasalahan}}">
+                            </div>    
+                            <div class="form-group">
+                                <label for="nama">Alias Permasalahan</label>
+                                <input type="text" class="form-control" name="alias" placeholder="Alias Permasalahan" required value="{{data.alias_permasalahan}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Input Text Persetujuan</label>
+                                <select name="input_text" class="form-control">
+                                {{#select data.input_text}}
+                                <option value="0">Tidak Perlu</option>
+                                <option value="1">Perlu</option>
+                                {{/select}}
+                                </select>
+                            </div>                              
+                            <div class="form-group">
+                                <label>Status Persetujuan</label>
+                                <select name="status" class="form-control">
+                                {{#select data.active}}
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                                {{/select}}
+                                </select>
+                            </div>
+                            <input type="hidden" class="form-control" name="pstj_id" value="{{data.id}}">
+                            <input type="submit" class="btn btn-primary" ></input>
+                        </form>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

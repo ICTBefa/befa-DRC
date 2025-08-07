@@ -1,0 +1,91 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<style> 
+
+table td {
+max-width: 200px;
+white-space: nowrap;
+text-overflow: ellipsis;
+word-break: break-all;
+overflow: hidden;
+}
+</style>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b> {{title}} </b> </h1>
+                    {{#if status}}
+                    <h4 class="m-0 text-{{statusColor}}"> {{status}}  </h4>
+                    {{/if}}
+                </div>
+            </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <table id="dataTables" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Sumber EPICA</th>
+                                    <th>Pengusul</th>
+                                    <th>Nama Pelaksana</th>
+                                    <th>Dept Pelaksana</th>
+                                    <th>Deskripsi Masalah</th>
+                                    <th>Tgl Buka</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each data}}
+                                <tr>
+                                    <td>{{inc @index}}</td>
+                                    <td>{{this.alias_permasalahan}}</td>
+                                    <td>{{this.pengusul_fullname}}</td>
+                                    <td>{{this.pelaksana_fullname}}</td>
+                                    <td>{{this.kode_department}}</td>
+                                    <td>{{{removeBr this.deskripsi_masalah}}}</td>
+                                    <td>{{this.tanggal_buka}}</td>
+                                    {{#if this.hidden}}
+                                    <td>hidden</td>
+                                    <td>
+                                        <a title="unhide" href="/unhidePica/{{this.id}}"><i class="fa fa-eye" aria-hidden="true"> UNHIDE</i> </span></a>
+                                    </td>
+                                    {{else}}
+                                    <td>shown</td>
+                                    <td>
+                                        <a title="view" href="/viewEpicaVerify/{{this.id}}"><i class="fa fa-eye" aria-hidden="true"> VIEW</i> </span></a>
+                                    </td>
+                                    {{/if}}
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25,
+        "scrollX": true
+        });
+    </script>
+{{/section}}

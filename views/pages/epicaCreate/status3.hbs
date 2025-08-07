@@ -1,0 +1,177 @@
+<link href="/node_modules/summernote-0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="/node_modules/summernote-0.8.18/dist/summernote.min.js"></script>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/epicaList" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 class="m-0 text-dark">{{title}}</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-11" style="margin-top: 1px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/assets/dist/img/logo.png"
+                                class="rounded" alt="logo">
+                                <p class="font-weight-bold" style="margin-top: 50px; ">FORM PROBLEM IDENTIFICATION & CORRECTIVE ACTION</p>
+                            </div>
+
+                            <form method="POST" action="/StatusThreeAddUpdate">
+                                <div class="form-group row">
+                                    <div class="col-sm-1">No</div>
+                                    <div class="col-sm-6">: {{dataEpicaMaster.no_pica}}</div>
+                                </div>   
+                                <div class="form-group row">
+                                    <div class="col-sm-1" >Bagian</div>
+                                    <div class="col-sm-6">: {{dataEpicaMaster.nama_department}}</div>
+                                </div>
+                                <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                                    <div class="col-sm-9">
+                                        {{#each dataPersetujuan}}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" required>
+                                                <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                    {{#if dataEpicaMaster.persetujuan_text}}
+                                    <div class="col-sm-12" id="divInputText" style="">
+                                    Keluhan Dari : {{{dataEpicaMaster.persetujuan_text}}}
+                                    </div>
+                                    {{/if}}
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div id="desc" class="border border-dark">
+                                            <div style="margin: 10px;">
+                                                <label for="desclabel">Deskripsi Masalah/Potensial Masalah :</label>
+                                                <p>{{{dataEpicaMaster.deskripsi_masalah}}}</p>
+
+                                                <div class="row justify-content-end">
+                                                    <div class="col-6 col-sm-3 border border-dark">
+                                                        <p class="text-center">Pelaksana</p>
+                                                        <p name="pelaksana" style="text-align:center">{{dataEpicaMaster.pelaksana_fullname}}</p>
+                                                    </div>
+                                                    <div class="col-6 col-sm-3 border border-dark">
+                                                        <p class="text-center">Pengusul</p>
+                                                        <p name="pengusul" style="text-align:center">{{dataEpicaMaster.pengusul_fullname}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="akar" class="border border-dark">
+                                            <div style="margin: 10px;">
+                                                <label for="akar">Akar Masalah :</label>
+                                                <p>{{{dataEpicaMaster.akar_masalah}}}</p>
+                                            </div>
+                                        </div>
+                                        <table class="table table-bordered text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="text-align: center;">No</th>
+                                                    <th scope="col" style="text-align: center;">Tindakan Koreksi/Pencegahan</th>
+                                                    <th scope="col" style="text-align: center;">PIC</th>
+                                                    <th scope="col" style="text-align: center;">Batas Waktu</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#each dataEpicaDetails}}
+                                            <tr>
+                                                <td scope="row" style="text-align: center;" class="align-middle" name="">{{this.urutan_tindakan}}</td>
+                                                <td class="align-middle">
+                                                    <div class="form-group" >
+                                                        <textarea style="display:none;" id="tindakan{{this.urutan_tindakan}}" name="tindakan{{this.urutan_tindakan}}"> {{this.tindakan_koreksi}} </textarea>
+                                                        {{{this.tindakan_koreksi}}}
+                                                    </div>
+                                                </td>
+                                                <td style="text-align: center;" class="align-middle">{{this.fullname}}</td>
+                                                <td class="align-middle">
+                                                    <input type="hidden"  id="batas_waktu{{this.urutan_tindakan}}" name="batas_waktu{{this.urutan_tindakan}}" value="{{this.batas_waktu}}"/>
+                                                    {{this.batas_waktu}}
+                                                </td>
+                                            </tr>
+                                            {{/each}} 
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                    <br>
+                                    <br>
+                                <input type="hidden" name="pica_master_id" value="{{dataEpicaMaster.id}}">
+                                <input type="hidden" name="from_pica_status" value="{{dataEpicaMaster.pica_status_id}}">
+                                <input type="hidden" id="pathname" name="pathname" value="">
+                                {{#if roleMatch}}
+                                    <a href="/changeStatusThree/{{dataEpicaMaster.id}}" class="btn btn-primary float-left" style="margin-right: 10px"> Approve</a>
+                                    <input onclick="showDiv()" type="button" class="btn btn-secondary float-left" value="Reject PICA">
+                                {{/if}}
+                            </form>
+                        </div>
+                    </div>
+                    <div id="tolakDiv" style="display:none;">
+                    <form method="post" action="/rejectPica">
+                        <br>
+                        <h4>Alasan Reject:</h4>
+                        
+                        <textarea id="alasan_reject" name="alasan_reject" required></textarea>
+                        
+                        <input type="hidden" name="pica_master_id" value="{{dataEpicaMaster.id}}">
+                        <input type="hidden" name="from_pica_status" value="{{dataEpicaMaster.pica_status_id}}">
+                        <input type="submit" class="btn btn-primary" value="Reject PICA">
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{{#section 'custom_script'}}
+<script>
+    var status="{{status}}"
+    var alias_masalah="{{dataEpicaMaster.alias_permasalahan}}"
+    var dataPersetujuan={{{persetujuanJSON}}}
+    
+    $("#alasan_reject").summernote();
+    function showDiv() {
+        document.getElementById('tolakDiv').style.display = "block";
+        document.getElementById('tolakDiv').scrollIntoView();
+    }
+
+    $(document).ready(function() {
+        var path = window.location.pathname;
+        $('#pathname').val(path);
+
+        $('input[name=persetujuan_id]').attr("disabled",true);
+        for (var i= 0; i < dataPersetujuan.length;i++ ) {
+            if (alias_masalah == dataPersetujuan[i].alias_permasalahan )
+                $("input[name=persetujuan_id][value=" + dataPersetujuan[i].id + "]").prop('checked', true);
+        }
+
+        $('#deskripsi_masalah').summernote({
+            toolbar: false,
+            disableDragAndDrop :true,
+            disableResizeEditor: true,
+            code: true
+        });
+        $('#deskripsi_masalah'). summernote('disable');
+
+        $('#akar_masalah').summernote({
+            toolbar: false,
+            disableDragAndDrop :true,
+            disableResizeEditor: true,
+            code: true
+        });
+        $('#akar_masalah'). summernote('disable');
+
+    });
+</script>
+{{/section}}

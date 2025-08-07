@@ -1,0 +1,598 @@
+<link href="/node_modules/summernote-0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="/node_modules/summernote-0.8.18/dist/summernote.min.js"></script>
+<style>
+
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+input[type=text] {
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff; 
+  border-bottom: 1px solid #d4d4d4; 
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #e9e9e9; 
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
+}
+</style>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/epicaList" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 class="m-0 text-dark">Akar Masalah / Tindakan EPICA</h1>
+                </div>
+            </div>    
+            <div class="row justify-content-center">
+                <div class="col-lg-11" style="margin-top: 1px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/assets/dist/img/logo.png"
+                                class="rounded" alt="logo">
+                                <p class="font-weight-bold" style="margin-top: 50px; ">FORM PROBLEM IDENTIFICATION & CORRECTIVE ACTION</p>
+                            </div>
+
+                            <form id="tindakanForm" name="tindakanForm" method="post" action="/AkarMasalahPicaEdit">
+                                <div class="form-group row">
+                                    <div class="col-sm-1">No : </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-check-input" type="hidden" name="no_pica" id="no_pica" value="">
+                                        <p id="no_pica_text"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-1">Bagian : </div>
+                                    <div class="col-sm-3">
+                                        <input class="form-check-input" type="hidden" name="dept_id" id="dept_id" value="">
+                                        <p id="dept_id_text"></p>
+                                    </div>
+                                </div>
+                                <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                                    <div class="col-sm-9">
+                                        {{#each dataPersetujuan}}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" required>
+                                                <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                    {{#if data.persetujuan_text}}
+                                    <div class="col-sm-12" id="divInputText" style="">
+                                    Keluhan Dari : {{{data.persetujuan_text}}}
+                                    </div>
+                                    {{/if}}
+                                </div>
+
+                                <div class="card">
+                                    <div id="desc" class="border border-dark">
+                                        <div style="margin: 10px;">
+                                            <label for="desclabel">Deskripsi Masalah/Potensial Masalah :</label>
+                                            <p>{{{data.deskripsi_masalah}}}</p>
+                                            
+                                            <div class="row justify-content-end">
+                                                <div class="col-sm-3 border border-dark">
+                                                    <p class="text-center">Pelaksana</p>
+                                                    <input class="form-check-input" type="hidden" name="pelaksana_id" id="pelaksana_id" value="" style="display:block; margin : 0 auto;">
+                                                    <p id="pelaksana_text" style="text-align:center"></p>
+                                                </div>
+                                                <div class="col-sm-3 border border-dark">
+                                                    <p class="text-center">Pengusul</p>
+                                                    <input class="form-check-input" type="hidden" name="pengusul_id" id="pengusul_id" value="" style="display:block; margin : 0 auto;">
+                                                    <p id="pengusul_text" style="text-align:center"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div id="akar" >
+                                        <label for="akar">Akar Masalah :</label>
+                                        {{#if_equal data.pica_status_id "2"}}
+                                        <textarea id="akar_masalah" name="akar_masalah" required></textarea>
+                                        {{else}}
+                                        <textarea id="akar_masalah" name="akar_masalah" required>{{{data.akar_masalah}}}</textarea>
+                                        {{/if_equal}}
+                                    </div>
+                                    <p>
+                                        
+                                    <input type="button" id="addRow" class="btn btn-primary" value="Add New Tindakan" onclick="addOneRow()" />
+                                    
+                                    </p>
+                                    <table id="empTable" class="table table-bordered text-center">
+                                        
+                                    </table>
+
+                                    <input type="hidden" value='' name="tindakanArray" id="tindakanArray">
+                                    
+                                </div>
+                                    <input type="hidden" name="pica_master_id" value="{{data.id}}">
+                                    <input type="hidden" name="status_id" value="{{data.pica_status_id}}">
+                                    {{#if_equal data.pica_status_id "2"}}
+                                    {{#if roleMatch}}
+                                    <input onclick="showDiv()" type="button" class="btn btn-secondary float-left" value="Revisi PICA">
+                                    {{/if}}
+                                    {{/if_equal}}
+
+                                    {{#if roleMatchTwo}}
+                                    <input type="button" value="Submit" class="btn btn-primary float-right" onclick="tindakanFormSubmit()">
+                                    {{/if}}
+                            </form>
+                            
+                        </div>
+                    </div>
+                    {{#if_equal data.pica_status_id "6"}}
+                    <div id="alasanDiv">
+                        <br>
+                        <h4>Alasan Reject:</h4>
+                        <br>
+                        {{{data.alasan_tolak_revisi}}}
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+                    {{/if_equal}}
+
+                    {{#if_equal data.pica_status_id "11"}}
+                    <div id="alasanDiv">
+                        <br>
+                        <h4>Alasan Reject:</h4>
+                        <br>
+                        {{{data.alasan_tolak_revisi}}}
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+                    {{/if_equal}}
+
+                    <div id="tolakDiv" style="display:none;">
+                    <form method="post" action="/revisiPica">
+                        <br>
+                        <h4>Alasan Revisi:</h4>
+                        
+                        <textarea id="alasan_revisi" name="alasan_revisi" required></textarea>
+                        
+                        <input type="hidden" name="pica_master_id" value="{{data.id}}">
+                        <input type="submit" class="btn btn-primary" value="Revisi EPICA">
+                    </form>
+                    </div>
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{{#section 'custom_script'}}
+<script>
+    // START AUTOCOMPLETE
+    function autocomplete(inp, arr,order) {
+    /*the autocomplete function takes two arguments,
+    the text field element and an array of possible autocompleted values:*/
+    var currentFocus;
+    /*execute a function when someone writes in the text field:*/
+    inp.addEventListener("input", function(e) {
+        var a, b, i, val = this.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) { return false;}
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        this.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:*/
+            if (arr[i].fullname.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            /*create a DIV element for each matching element:*/
+            b = document.createElement("DIV");
+            /*make the matching letters bold:*/
+            b.innerHTML = "<strong>" + arr[i].fullname.substr(0, val.length) + "</strong>";
+            b.innerHTML += arr[i].fullname.substr(val.length);
+            /*insert a input field that will hold the current array item's value:*/
+            b.innerHTML += "<input type='hidden' value='" + arr[i].id + "'>";
+            b.innerHTML += "<input type='hidden' value='" + arr[i].fullname + "'>";
+            /*execute a function when someone clicks on the item value (DIV element):*/
+            b.addEventListener("click", function(e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[1].value;
+                $("#user_id_" + order).val(this.getElementsByTagName("input")[0].value);
+                /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+                closeAllLists();
+            });
+            a.appendChild(b);
+            }
+        }
+    });
+    /*execute a function presses a key on the keyboard:*/
+    inp.addEventListener("keydown", function(e) {
+        var x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+            increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+        } else if (e.keyCode == 38) { //up
+            /*If the arrow UP key is pressed,
+            decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+        } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (x) x[currentFocus].click();
+            }
+        }
+    });
+    function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocomplete-active");
+    }
+    function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("autocomplete-active");
+        }
+    }
+    function closeAllLists(elmnt) {
+        /*close all autocomplete lists in the document,
+        except the one passed as an argument:*/
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+        if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+        }
+        }
+    }
+    /*execute a function when someone clicks in the document:*/
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+    }
+    //END AUTOCOMPLETE
+
+
+    //START MULTIPLE ROW
+
+    var arrBodyCount = 0;
+    var arrHead = new Array();	// array for header.
+    arrHead = ['Tindakan Koreksi/Pencegahan', 'PIC', 'Batas Waktu', ''];
+
+    // first create TABLE structure with the headers. 
+    function createTable() {
+        var empTable = document.getElementById("empTable");// get table id.
+        //var empTable = document.createElement('table');
+        //empTable.setAttribute('id', 'empTable'); // table id.
+
+        var tr = empTable.insertRow(-1);
+        for (var h = 0; h < arrHead.length; h++) {
+            var th = document.createElement('th'); // create table headers
+            th.innerHTML = arrHead[h];
+            tr.appendChild(th);
+        }
+
+        //var div = document.getElementById('cont');
+        //div.appendChild(empTable);  // add the TABLE to the container.
+    }
+
+    // now, add a new to the TABLE.
+    function addOneRow() {
+        var empTab = document.getElementById('empTable');
+        var rowCnt = empTab.rows.length;   // table row count.
+        
+        var tr = empTab.insertRow(rowCnt); // the table row.
+        tr = empTab.insertRow(rowCnt);
+
+        for (var c = 0; c < arrHead.length; c++) {
+            var td = document.createElement('td'); // table definition.
+            td = tr.insertCell(c);
+
+            if (c == arrHead.length - 1) {      // the last column.
+                // add a button in every new row in the last column.
+                var button = document.createElement('input');
+
+                // set input attributes.
+                button.setAttribute('type', 'button');
+                button.setAttribute('value', 'Remove');
+
+                // add button's 'onclick' event.
+                button.setAttribute('onclick', 'removeRow(this)');
+
+                td.appendChild(button);
+            } else if (c == 2){
+                
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'text');
+                ele.setAttribute('value', '');
+                ele.setAttribute('required', 'required');
+                ele.setAttribute('autocomplete', 'off');
+                ele.setAttribute('align', 'center');
+                ele.setAttribute('id','batas_waktu_' + arrBodyCount);
+                td.appendChild(ele);
+
+                $("#batas_waktu_"+arrBodyCount).daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    autoUpdateInput: false,
+                    minDate: new Date(),
+                    locale: {
+                        format: 'DD MMM YYYY'
+                    }
+                });
+                $("#batas_waktu_"+arrBodyCount).on('apply.daterangepicker', function(ev, picker) {
+                    $(this).val(picker.startDate.format('DD MMM YYYY'));
+                });
+                
+            } else if (c == 1) {
+                //first ele
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'text');
+                ele.setAttribute('value', '');
+                ele.setAttribute('required', 'required');
+                ele.setAttribute('autocomplete', 'off');
+                ele.setAttribute('align', 'center');
+                ele.setAttribute('placeholder', 'Input PIC');
+                ele.setAttribute('id','user_id_ac_'+ arrBodyCount);
+                td.appendChild(ele);
+
+                //second ele -> hidden ele
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'hidden');
+                ele.setAttribute('value', '');
+                ele.setAttribute('align', 'center');
+                ele.setAttribute('id','user_id_' + arrBodyCount);
+                td.appendChild(ele);
+                
+                autocomplete(document.getElementById("user_id_ac_"+ arrBodyCount), dataUser, arrBodyCount);
+            }
+            else {
+                // tindakan column will only have textbox.
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'text');
+                ele.setAttribute('required', 'required');
+                ele.setAttribute('value', '');
+                ele.setAttribute('align', 'center');
+
+                td.appendChild(ele);
+            }
+        }
+        arrBodyCount++;
+    }
+
+    // now, add a new to the TABLE.
+    function addOneRowWithData(order) {
+        var empTab = document.getElementById('empTable');
+        var rowCnt = empTab.rows.length;   // table row count.
+        
+        var tr = empTab.insertRow(rowCnt); // the table row.
+        tr = empTab.insertRow(rowCnt);
+
+        for (var c = 0; c < arrHead.length; c++) {
+            var td = document.createElement('td'); // table definition.
+            td = tr.insertCell(c);
+
+            if (c == arrHead.length - 1) {      // the last column.
+                // add a button in every new row in the last column.
+                var button = document.createElement('input');
+
+                // set input attributes.
+                button.setAttribute('type', 'button');
+                button.setAttribute('value', 'Remove');
+
+                // add button's 'onclick' event.
+                button.setAttribute('onclick', 'removeRow(this)');
+
+                td.appendChild(button);
+            } else if (c == 2){
+                
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'text');
+                ele.setAttribute('value', dataEpicaDetails[order].batas_waktu);
+                ele.setAttribute('required', 'required');
+                ele.setAttribute('autocomplete', 'off');
+                ele.setAttribute('align', 'center');
+                ele.setAttribute('id','batas_waktu_' + arrBodyCount);
+                td.appendChild(ele);
+
+                $("#batas_waktu_"+arrBodyCount).daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    autoUpdateInput: false,
+                    minDate: new Date(),
+                    locale: {
+                        format: 'DD MMM YYYY'
+                    }
+                });
+                $("#batas_waktu_"+arrBodyCount).on('apply.daterangepicker', function(ev, picker) {
+                    $(this).val(picker.startDate.format('DD MMM YYYY'));
+                });
+                
+            } else if (c == 1) {
+                //first ele
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'text');
+                ele.setAttribute('value', dataEpicaDetails[order].fullname);
+                ele.setAttribute('required', 'required');
+                ele.setAttribute('autocomplete', 'off');
+                ele.setAttribute('align', 'center');
+                ele.setAttribute('placeholder', 'Input PIC');
+                ele.setAttribute('id','user_id_ac_'+ arrBodyCount);
+                td.appendChild(ele);
+
+                //second ele -> hidden ele
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'hidden');
+                ele.setAttribute('value', dataEpicaDetails[order].pic_user_id);
+                ele.setAttribute('align', 'center');
+                ele.setAttribute('id','user_id_' + arrBodyCount);
+                td.appendChild(ele);
+                
+                autocomplete(document.getElementById("user_id_ac_"+ arrBodyCount), dataUser, arrBodyCount);
+            }
+            else {
+                // tindakan column will only have textbox.
+                var ele = document.createElement('input');
+                ele.setAttribute('type', 'text');
+                ele.setAttribute('required', 'required');
+                ele.setAttribute('value', dataEpicaDetails[order].tindakan_koreksi);
+                ele.setAttribute('align', 'center');
+
+                td.appendChild(ele);
+            }
+        }
+        arrBodyCount++;
+    }
+
+
+    // delete TABLE row function.
+    function removeRow(oButton) {
+        var empTab = document.getElementById('empTable');
+        empTab.deleteRow(oButton.parentNode.parentNode.rowIndex); // button -> td -> tr.
+    }
+    var arrValues = new Array();
+
+    // function to extract and submit table data.
+    function submitValue() {
+        var myTab = document.getElementById('empTable');
+        
+        // loop through each row of the table.
+        for (row = 1; row < myTab.rows.length - 1; row++) {
+        	// loop through each cell in a row.
+            for (c = 0; c < myTab.rows[row].cells.length; c++) {  
+                //specialize cell with name in it -> accept the hidden value
+                if (c == 1) {
+                    var element = myTab.rows.item(row).cells[c];
+                    if (element.childNodes[1].getAttribute('type') == 'hidden') {
+                        arrValues.push("'" + element.childNodes[1].value + "'");
+                    }
+                } else {
+                    var element = myTab.rows.item(row).cells[c];
+                    if (element.childNodes[0].getAttribute('type') == 'text') {
+                        //filter and change all the comma, and change all single quote
+                        element.childNodes[0].value = element.childNodes[0].value.replace(/,/g, '.');
+                        element.childNodes[0].value = element.childNodes[0].value.replace(/'/g, '"');
+                        
+                        arrValues.push("'" + element.childNodes[0].value + "'");
+                    }
+                }
+            }
+        }
+        
+        // The final output.
+        //document.getElementById('output').innerHTML = arrValues;
+        $("#tindakanArray").val(arrValues);
+        console.log (arrValues);   // you can see the array values in your browsers console window. Thanks :-) 
+    }
+    //END MULTIPLE ROW
+
+    var dataUser={{{dataUserJSON}}}
+    var dataEpicaDetails={{{dataEpicaDetailsJSON}}}
+    //autocomplete(document.getElementById("user_id_1_ac"), dataUser, 1);
+    //autocomplete(document.getElementById("user_id_2_ac"), dataUser, 2);
+    //autocomplete(document.getElementById("user_id_3_ac"), dataUser, 3);
+
+    $("#alasan_revisi").summernote();
+    function showDiv() {
+        document.getElementById('tolakDiv').style.display = "block";
+        document.getElementById('tolakDiv').scrollIntoView();
+    }
+
+    function tindakanFormSubmit()
+    {
+        submitValue();
+        document.getElementById("tindakanForm").submit();
+    }
+    var status="{{data.pica_status_id}}"
+    var masalah="{{data.alias_permasalahan}}"
+    var dataPersetujuan={{{persetujuanJSON}}}
+    var no_pica="{{data.no_pica}}"
+    var dept_id="{{data.nama_department}}"
+    $(function(){
+        if (status == 2 || status == 6 || status == 8 || status == 11){
+            
+            $("#no_pica").val(no_pica);
+            $("#no_pica_text").text(no_pica);
+            $("#dept_id").val(dept_id);
+            $("#dept_id_text").text(dept_id);
+            $('#deskripsi_masalah').summernote({
+                toolbar: false,
+                disableDragAndDrop :true,
+                disableResizeEditor: true,
+                code: true
+            });
+            $('#deskripsi_masalah'). summernote('disable');
+            $('input[name=persetujuan_id]').attr("disabled",true);
+            for (let i= 0; i < dataPersetujuan.length;i++ ) {
+                if (masalah == dataPersetujuan[i].alias_permasalahan )
+                    $("input[name=persetujuan_id][value=" + dataPersetujuan[i].id + "]").prop('checked', true);
+            }
+            $(document).ready(function() {
+                $('#akar_masalah').summernote();
+            });
+            $("#pelaksana_id").val("{{data.pelaksana_user_id}}");
+            $("#pelaksana_text").text("{{data.pelaksana_fullname}}");
+            $("#pengusul_id").val("{{data.pengusul_user_id}}");
+            $("#pengusul_text").text("{{data.pengusul_fullname}}");
+
+            //console log
+            console.log(dataEpicaDetails) 
+            createTable();
+            for (let i=0; i< dataEpicaDetails.length; i++) {
+                addOneRowWithData(i);
+            }
+        } 
+    });
+</script>
+{{/section}}
+

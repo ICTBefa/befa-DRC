@@ -1,0 +1,84 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b> {{title}} </b> </h1>
+                    {{#if status}}
+                    <h4 class="m-0 text-{{statusColor}}"> {{status}}  </h4>
+                    {{/if}}
+                </div>
+            </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <a href="/userCreate" class="btn btn-primary"> Create New User</a>
+                        <table id="dataTables" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Fullname</th>
+                                    <th>Username</th>
+                                    <th>NIK</th>
+                                    <th>Level Akses</th>
+                                    <th>Perusahaan</th>
+                                    <th>Lokasi</th>
+                                    <th>Status User</th>
+                                    <th>Email</th>
+                                    <th colspan='2'>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each data}}
+                                <tr>
+                                    <td>{{inc @index}}</td>
+                                    <td>{{this.fullname}}</td>
+                                    <td>{{this.username}}</td>
+                                    <td>{{this.nik}}</td>
+                                    <td>{{this.level_akses_name}}</td>
+                                    <td>{{this.company_name}}</td>
+                                    <td>{{this.location_name}}</td>
+                                    {{#if this.active}}
+                                            <td>Aktif</td>
+                                    {{else}}
+                                            <td>Tidak Aktif</td>
+                                    {{/if}}
+                                    <td>{{this.email}}</td>
+                                    <td>
+                                        <a title="edit" href="/userEdit/{{this.id}}" class="btn btn-warning"><i class="fa fa-edit" aria-hidden="true"></i></span></a>
+                                    </td>
+                                    <td> 
+                                        <a title="change active status" href="/userDelete/{{this.id}}" class="btn btn-warning"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

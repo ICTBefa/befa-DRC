@@ -1,0 +1,92 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b> {{title}} </b> </h1>
+                    {{#if status}}
+                    <h4 class="m-0 text-{{statusColor}}"> {{status}}  </h4>
+                    {{/if}}
+                </div>
+            </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <table id="dataTables" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Group Reminder</th>
+                                    <th>Reminder </th>
+                                    <th>Add Reminder</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each dataReminder}}
+                                <tr>
+                                    <td>{{inc @index}}</td>
+                                    <td>{{this.reminder_type}}</td>
+                                    <td> 
+                                        {{#each ../dataReminderList}} 
+                                            {{#if_equal this.before_after "B"}}
+                                                {{#if_equal ../this.id this.reminder_id}}
+                                                    <a title="edit" class="btn btn-primary" href="/reminderEdit/{{this.id}}"> <i class="far fa-clock"></i> -{{this.days}} days &nbsp; </a>
+                                                {{/if_equal}}
+                                            {{/if_equal}}
+                                        {{/each}}
+                                    
+                                        {{#each ../dataReminderList}} 
+                                            {{#if_equal this.before_after "A"}}
+                                                {{#if_equal ../this.id this.reminder_id}}
+                                                    <a title="edit" class="btn btn-primary" href="/reminderEdit/{{this.id}}"><i class="far fa-clock"></i> +{{this.days}} days &nbsp; </a>
+                                                {{/if_equal}}
+                                            {{/if_equal}}
+                                        {{/each}}
+                                    </td>
+                                    <td>
+                                        <form class="form-horizontal" action="/CreateNewReminder" method="post" role="form">
+                                        <div class="form-group row">
+                                            <select name="beforeAfter" class="col-sm-4">
+                                            <option value="B"> Before </option>
+                                            <option value="A"> After </option>
+                                            </select>
+                                            &nbsp;
+                                            <input type="number" class="col-sm-4" name="days" placeholder="Input Days" required>
+                                            &nbsp;
+                                            <input type="hidden" class="" name="reminderId" value="{{this.id}}">
+                                            <input type="submit" class="btn btn-primary col-sm-3" value="Add" ></input>
+                                        </div>
+                                        </form>  
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

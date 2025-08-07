@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/departmentList" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 class="m-0 text-dark"> <b>{{title}}</b></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                          <form action="/EditDepartment" method="post" role="form">
+                            <div class="form-group">
+                                <label for="kode">Kode Divisi</label>
+                                <input type="text" class="form-control" name="kode" placeholder="Kode Department" required value="{{data.kode_department}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="nama">Nama Divisi</label>
+                                <input type="text" class="form-control" name="nama" placeholder="Nama Department" required value="{{data.nama_department}}">
+                            </div>                            
+                            <div class="form-group">
+                                <label>Status Divisi</label>
+                                <select name="status" class="form-control">
+                                {{#select data.active}}
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                                {{/select}}
+                                </select>
+                            </div>
+                            <input type="hidden" class="form-control" name="dpmt_id" value="{{data.id}}">
+                            <input type="submit" class="btn btn-primary" ></input>
+                        </form>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

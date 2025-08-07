@@ -1,0 +1,134 @@
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/epicaVerifikasi" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 class="m-0 text-dark">{{title}}</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-11" style="margin-top: 1px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/assets/dist/img/logo.png"
+                                class="rounded" alt="logo">
+                                <p class="font-weight-bold" style="margin-top: 50px; ">FORM PROBLEM IDENTIFICATION & CORRECTIVE ACTION</p>
+                            </div>
+
+                            <form id="deskripsiM">
+                                <div class="form-group row">
+                                    <div class="col-sm-1">No</div>
+                                    <div class="col-sm-6">: {{dataVerif.no_pica}}</div>
+                                </div>   
+                                <div class="form-group row">
+                                    <div class="col-sm-1" >Bagian</div>
+                                    <div class="col-sm-6">: {{dataVerif.nama_department}}</div>
+                                </div>
+                                <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                                    <div class="col-sm-9">
+                                        {{#each dataPersetujuan}}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" required>
+                                                <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                            </div>
+                                        {{/each}}
+                                        
+                                    </div>
+                                    {{#if dataVerif.persetujuan_text}}
+                                    <div class="col-sm-12" id="divInputText" style="">
+                                    Keluhan Dari : {{{dataVerif.persetujuan_text}}}
+                                    </div>
+                                    {{/if}}
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div id="desc" class="border border-dark">
+                                            <div style="margin: 10px;">
+                                                <label for="Desc">Deskripsi Masalah/Potensial Masalah :</label>
+                                                <br>
+                                                {{!-- <textarea class="form-control" id="Desc" name="Desc" rows="3"></textarea> --}}
+                                                <p>{{{dataVerif.deskripsi_masalah}}}</p>
+                                                <div class="row justify-content-end">
+                                                    <div class="col-6 col-sm-3 border border-dark">
+                                                        <p class="text-center">Pelaksana</p>
+                                                        <p name="pelaksana" style="text-align:center">{{dataVerif.pelaksana_fullname}}</p>
+                                                    </div>
+                                                    <div class="col-6 col-sm-3 border border-dark">
+                                                        <p class="text-center">Pengusul</p>
+                                                        <p name="pengusul" style="text-align:center">{{dataVerif.pengusul_fullname}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                    </div>
+                    <input onclick="verify()" type="button" class="btn btn-primary" value="Setujui EPICA">
+                    <input onclick="showDiv()" type="button" class="btn btn-primary" value="Tolak EPICA">
+                    
+                    <div id="tolakDiv"  style="display:none;">
+                    <form method="post" action="/tidakSetujuPica">
+                        <br>
+                        <h4>Alasan Tidak Setuju:</h4>
+                        
+                        <textarea id="alasan_tolak" name="alasan_tolak" required></textarea>
+                        <br>
+                        <input type="hidden" name="pica_master_id" value="{{dataVerif.id}}">
+                        <input type="submit" class="btn btn-primary" value="Tolak EPICA">
+                    </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{{#section 'custom_script'}}
+<script>
+    var status="{{status}}";
+    var masalah="{{dataVerif.alias_permasalahan}}";
+    var dataPersetujuan={{{persetujuanJSON}}}
+
+    $("#alasan_tolak").summernote();
+
+    function verify(){
+        var strLink = "/verifyPica/";
+        strLink += "{{dataVerif.id}}";
+        strLink += "/";
+        strLink += "{{dataVerif.kode_department}}";
+        window.location=strLink;
+    }
+
+    function showDiv() {
+        document.getElementById('tolakDiv').style.display = "block";
+        document.getElementById('tolakDiv').scrollIntoView();
+    }
+
+    console.log(masalah);
+    $(function(){
+        if (status == 1) {
+            $('input[name=persetujuan_id]').attr("disabled",true);
+            for (var i= 0; i < dataPersetujuan.length;i++ ) {
+                if (masalah == dataPersetujuan[i].alias_permasalahan )
+                    $("input[name=persetujuan_id][value=" + dataPersetujuan[i].id + "]").prop('checked', true);
+            }
+        } if (status == 2 ){
+            
+        } if (status == 3 ){
+            
+        }
+    });
+</script>
+{{/section}}

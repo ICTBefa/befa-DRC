@@ -1,0 +1,598 @@
+<link href="/node_modules/summernote-0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="/node_modules/summernote-0.8.18/dist/summernote.min.js"></script>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <a href="/epicaList" class="btn btn-primary"> Back </a>
+                    <br><br>
+                    <h1 class="m-0 text-dark">{{title}}</h1>
+                </div>
+            </div>     
+            <div class="row justify-content-center">
+                <div class="col-lg-11" style="margin-top: 1px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/assets/dist/img/logo.png"
+                                class="rounded" alt="logo">
+                                <p class="font-weight-bold" style="margin-top: 50px; ">FORM PROBLEM IDENTIFICATION & CORRECTIVE ACTION</p>
+                            </div>
+
+                            <form method="POST" action="/StatusFourAddUpdate">
+                                <div class="form-group row">
+                                    <div class="col-sm-1">No</div>
+                                    <div class="col-sm-6">: {{dataEpicaMaster.no_pica}}</div>
+                                </div>   
+                                <div class="form-group row">
+                                    <div class="col-sm-1" >Bagian</div>
+                                    <div class="col-sm-6">: {{dataEpicaMaster.nama_department}}</div>
+                                </div>
+                                <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-3 pt-0">Ketidaksesuaian diangkat dari : </legend>
+                                    <div class="col-sm-9">
+                                        {{#each dataPersetujuan}}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="persetujuan_id" id="inlineRadio{{inc @index}}" value="{{this.id}}" required>
+                                                <label class="custom-control-label" for="inlineRadio{{inc @index}}">{{this.untuk_permasalahan}}</label>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                    {{#if dataEpicaMaster.persetujuan_text}}
+                                    <div class="col-sm-12" id="divInputText" style="">
+                                    Keluhan Dari : {{{dataEpicaMaster.persetujuan_text}}}
+                                    </div>
+                                    {{/if}}
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div id="desc" class="border border-dark">
+                                            <div style="margin: 10px;"> 
+                                                <label for="Desc">Deskripsi Masalah/Potensial Masalah :</label>
+                                                <p>{{{dataEpicaMaster.deskripsi_masalah}}}</p>
+                                                <div class="row justify-content-end">
+                                                    <div class="col-6 col-sm-3 border border-dark">
+                                                        <p class="text-center">Pelaksana</p>
+                                                        <p name="pelaksana" style="text-align:center">
+                                                            {{#if (eq dataEpicaMaster.pelaksana_user_id 0)}}
+                                                                {{dataEpicaMaster.pelaksana_text}}
+                                                            {{else}}
+                                                                {{dataEpicaMaster.pelaksana_fullname}}
+                                                            {{/if}}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-6 col-sm-3 border border-dark">
+                                                        <p class="text-center">Pengusul</p>
+                                                        <p name="pengusul" style="text-align:center">
+                                                            {{#if (eq dataEpicaMaster.pengusul_user_id 0)}}
+                                                                {{dataEpicaMaster.pengusul_text}}
+                                                            {{else}}
+                                                                {{dataEpicaMaster.pengusul_fullname}}
+                                                            {{/if}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                            
+                                        <div id="akar" class="border border-dark">
+                                            <div style="margin: 10px;">
+                                                <label for="akar">Akar Masalah :</label>
+                                                <p>{{{dataEpicaMaster.akar_masalah}}}</p>
+                                            </div>
+                                        </div>
+                                        <table class="table text-center" border="1">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="text-align: center;">No</th>
+                                                    <th scope="col" style="text-align: center;">Tindakan Koreksi/Pencegahan</th>
+                                                    <th scope="col" style="text-align: center;">PIC</th>
+                                                    <th scope="col" style="text-align: center;">Batas Waktu</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#each dataEpicaDetails}}
+                                                <tr>
+                                                    <td scope="row" style="text-align: center;" class="align-middle" name="">{{this.urutan_tindakan}}</td>
+                                                    <td class="align-middle">
+                                                        <div class="form-group" >
+                                                            <textarea style="display:none;" id="tindakan{{this.urutan_tindakan}}" name="tindakan{{this.urutan_tindakan}}"> {{this.tindakan_koreksi}} </textarea>
+                                                            {{{this.tindakan_koreksi}}}
+                                                        </div>
+                                                    </td>
+                                                    <td style="text-align: center;" class="align-middle">
+                                                        {{#if (eq this.pic_user_id 0)}}
+                                                            {{this.pic_text}}
+                                                        {{else}}
+                                                            {{this.fullname}}
+                                                        {{/if}}
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <input type="hidden"  id="batas_waktu{{this.urutan_tindakan}}" name="batas_waktu{{this.urutan_tindakan}}" value="{{this.batas_waktu}}"/>
+                                                        {{this.batas_waktu}}
+                                                    </td>
+                                                </tr>
+                                                {{/each}}
+                                            </tbody>
+                                        </table>
+                                        <hr style="background-color:black; border:none; height:1px; margin:0px;">
+                                        
+
+                                        {{!-- Verifikasi 1 --}}
+                                        <br>
+                                        <div class="container" style="width : 100%">
+                                            <div class="row" style="width : 100%">
+                                                <legend class="col-form-label col-sm-2 pt-0"><b>Verifikasi I : </b></legend> 
+                                                <div class="col-sm-10">
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        {{#if_equal dataEpicaVerifikasi.[0].status_verifikasi "Close"}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_1" id="sv11" value="Close" checked="checked">
+                                                        {{else}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_1" id="sv11" value="Close" required>
+                                                        {{/if_equal}}
+                                                        <label class="custom-control-label" for="sv11">Close</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        {{#if_equal dataEpicaVerifikasi.[0].status_verifikasi "Open"}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_1" id="sv12" value="Open" checked="checked" >
+                                                        {{else}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_1" id="sv12" value="Open" required>
+                                                        {{/if_equal}}
+                                                        <label class="custom-control-label" for="sv12">Open</label>
+                                                    </div>
+                                                    Tgl :
+                                                    {{#if dataEpicaVerifikasi.[0].tanggal_actual}}
+                                                        <input readonly type="text"  id="" name="tanggal_actual_1" value="{{dataEpicaVerifikasi.[0].tanggal_actual}}" />
+                                                    {{else}}
+                                                        <input autocomplete="off" type="text"  id="tanggal_actual_1" name="tanggal_actual_1" value="" />
+                                                    {{/if}}
+
+                                                    Rencana Verifikasi :
+                                                    {{#if dataEpicaVerifikasi.[0].tanggal_rencana}}
+                                                        <input readonly type="text"  id="tanggal_rencana_1" name="tanggal_rencana_1" value="{{dataEpicaVerifikasi.[0].tanggal_rencana}}" />
+                                                    {{else}}
+                                                        <input autocomplete="off" type="text" id="tanggal_rencana_1" name="tanggal_rencana_1" value="" required />
+                                                    {{/if}}
+                                                </div>
+
+                                                <div class="col-md-10">
+                                                    Catatan :
+                                                    {{#if dataEpicaVerifikasi.[0].catatan}}
+                                                        {{{dataEpicaVerifikasi.[0].catatan}}}
+                                                        <textarea style="display:none" id="" name="catatan_1">{{{dataEpicaVerifikasi.[0].catatan}}}</textarea>    
+                                                    {{else}}
+                                                        <textarea id="catatan_1" name="catatan_1"></textarea>    
+                                                    {{/if}}
+                                                </div>
+                                                
+                                                <div class="col-md-2 border border-dark" style="margin-top: 30px;">
+                                                    <p class="text-center">Diverifikasi : </p>
+                                                    <p align="center">
+                                                        {{#if dataEpicaVerifikasi.[0].pelaksana_text}}
+                                                            {{dataEpicaVerifikasi.[0].pelaksana_text}}
+                                                        {{else}}
+                                                            {{#unless dataEpicaVerifikasi.[0].verified_by_user_id}}
+                                                                <p style="text-align: center;">-</p>
+                                                            {{else if (eq dataEpicaVerifikasi.[0].verified_by_user_id "0")}}
+                                                                <p style="text-align: center;">-</p>
+                                                            {{else}}
+                                                                {{dataEpicaVerifikasi.[0].fullname}}
+                                                            {{/unless}}
+                                                        {{/if}}
+                                                    </p>
+                                                </div>
+                                                {{#if dataEpicaVerifikasi.[0].id}}
+                                                    <input type="hidden" name="verifikasi_id_1" value="{{dataEpicaVerifikasi.[0].id}}">
+                                                {{else}}
+                                                    <input type="hidden" name="verifikasi_id_1" value="0">
+                                                {{/if}}
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <hr style="background-color:black; border:none; height:1px; margin:0px;">
+                                        <br>
+
+                                        {{!-- Verifikasi 2 --}}
+                                        <div class="container" style="width : 100%">
+                                            <div class="row" style="width : 100%">
+                                                <legend class="col-form-label col-sm-2 pt-0"><b>Verifikasi II : </b></legend> 
+                                                <div class="col-sm-10">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                        {{#if_equal dataEpicaVerifikasi.[1].status_verifikasi "Close"}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_2" id="sv21" value="Close" checked="checked">
+                                                        {{else}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_2" id="sv21" value="Close" required>
+                                                        {{/if_equal}}
+                                                        <label class="custom-control-label" for="sv21">Close</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        {{#if_equal dataEpicaVerifikasi.[1].status_verifikasi "Open"}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_2" id="sv22" value="Open" checked="checked" >
+                                                        {{else}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_2" id="sv22" value="Open" required>
+                                                        {{/if_equal}}
+                                                        <label class="custom-control-label" for="sv22">Open</label>
+                                                    </div>
+                                                    Tgl :
+                                                    {{#if dataEpicaVerifikasi.[1].tanggal_actual}}
+                                                        <input readonly type="text"  id="" name="tanggal_actual_2" value="{{dataEpicaVerifikasi.[1].tanggal_actual}}" />
+                                                    {{else}}
+                                                        <input autocomplete="off" type="text"  id="tanggal_actual_2" name="tanggal_actual_2" value="" />
+                                                    {{/if}}
+
+                                                    Rencana Verifikasi :
+                                                    {{#if dataEpicaVerifikasi.[1].tanggal_rencana}}
+                                                        <input readonly type="text"  id="" name="tanggal_rencana_2" value="{{dataEpicaVerifikasi.[1].tanggal_rencana}}" />
+                                                    {{else}}
+                                                        <input autocomplete="off" type="text" id="tanggal_rencana_2" name="tanggal_rencana_2" value="" required />
+                                                    {{/if}}
+                                                </div>
+
+                                                <div class="col-md-10">
+                                                    Catatan :
+                                                    {{#if dataEpicaVerifikasi.[1].catatan}}
+                                                        {{{dataEpicaVerifikasi.[1].catatan}}}
+                                                        <textarea style="display:none" id="" name="catatan_2">{{{dataEpicaVerifikasi.[1].catatan}}}</textarea>    
+                                                    {{else}}
+                                                        <textarea id="catatan_2" name="catatan_2"></textarea>    
+                                                    {{/if}}
+                                                </div>
+                                                
+                                                <div class="col-md-2 border border-dark" style="margin-top: 30px;">
+                                                    <p class="text-center">Diverifikasi : </p>
+                                                    <p align="center"> 
+                                                        {{#if dataEpicaVerifikasi.[1].pelaksana_text}}
+                                                            {{dataEpicaVerifikasi.[1].pelaksana_text}}
+                                                        {{else}}
+                                                            {{#unless dataEpicaVerifikasi.[1].verified_by_user_id}}
+                                                                <p style="text-align: center;">-</p>
+                                                            {{else if (eq dataEpicaVerifikasi.[1].verified_by_user_id "0")}}
+                                                                <p style="text-align: center;">-</p>
+                                                            {{else}}
+                                                                {{#if (eq dataEpicaVerifikasi.[1].verified_by_user_id 0)}}
+                                                                    {{dataEpicaVerifikasi.[1].pelaksana_text}}
+                                                                {{else}}
+                                                                    {{dataEpicaVerifikasi.[1].fullname}}
+                                                                {{/if}}
+                                                            {{/unless}}
+                                                        {{/if}}
+                                                    </p>
+                                                </div>
+                                                {{#if dataEpicaVerifikasi.[1].id}}
+                                                    <input type="hidden" name="verifikasi_id_2" value="{{dataEpicaVerifikasi.[1].id}}">
+                                                {{else}}
+                                                    <input type="hidden" name="verifikasi_id_2" value="0">
+                                                {{/if}}
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <hr style="background-color:black; border:none; height:1px; margin:0px;">
+                                        <br>
+                                        
+                                        {{!-- Verifikasi 3 --}}
+                                        <div class="container" style="width : 100%">
+                                            <div class="row" style="width : 100%">
+                                                <legend class="col-form-label col-sm-2 pt-0"><b>Verifikasi III : </b></legend> 
+                                                <div class="col-sm-10">
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        {{#if_equal dataEpicaVerifikasi.[2].status_verifikasi "Close"}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_3" id="sv31" value="Close" checked="checked">
+                                                        {{else}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_3" id="sv31" value="Close" required>
+                                                        {{/if_equal}}
+                                                        <label class="custom-control-label" for="sv31">Close</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        {{#if_equal dataEpicaVerifikasi.[2].status_verifikasi "Open"}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_3" id="sv32" value="Open" checked="checked" >
+                                                        {{else}}
+                                                        <input class="custom-control-input" type="radio" name="status_verifikasi_3" id="sv32" value="Open" required>
+                                                        {{/if_equal}}
+                                                        <label class="custom-control-label" for="sv32">Open</label>
+                                                    </div>
+                                                    Tgl :
+                                                    {{#if dataEpicaVerifikasi.[2].tanggal_actual}}
+                                                        <input readonly type="text"  id="" name="tanggal_actual_3" value="{{dataEpicaVerifikasi.[2].tanggal_actual}}" />
+                                                    {{else}}
+                                                        <input autocomplete="off" type="text"  id="tanggal_actual_3" name="tanggal_actual_3" value="" />
+                                                    {{/if}}
+
+                                                    Rencana Verifikasi :
+                                                    {{#if dataEpicaVerifikasi.[2].tanggal_rencana}}
+                                                        <input readonly type="text"  id="" name="tanggal_rencana_3" value="{{dataEpicaVerifikasi.[2].tanggal_rencana}}" />
+                                                    {{else}}
+                                                        <input autocomplete="off" type="text" id="tanggal_rencana_3" name="tanggal_rencana_3" value="" required/>
+                                                    {{/if}}
+                                                </div>
+
+                                                <div class="col-md-10">
+                                                    Catatan :
+                                                    {{#if dataEpicaVerifikasi.[2].catatan}}
+                                                        {{{dataEpicaVerifikasi.[2].catatan}}}
+                                                        <textarea style="display:none" id="" name="catatan_3">{{{dataEpicaVerifikasi.[2].catatan}}}</textarea>    
+                                                    {{else}}
+                                                        <textarea id="catatan_3" name="catatan_3"></textarea>    
+                                                    {{/if}}
+                                                </div>
+                                                
+                                                <div class="col-md-2 border border-dark" style="margin-top: 30px;">
+                                                    <p class="text-center">Diverifikasi : </p>
+                                                    <p align="center"> 
+                                                        {{#if dataEpicaVerifikasi.[2].pelaksana_text}}
+                                                            {{dataEpicaVerifikasi.[2].pelaksana_text}}
+                                                        {{else}}
+                                                            {{#unless dataEpicaVerifikasi.[2].verified_by_user_id}}
+                                                                <p style="text-align: center;">-</p>
+                                                            {{else if (eq dataEpicaVerifikasi.[2].verified_by_user_id "0")}}
+                                                                <p style="text-align: center;">-</p>
+                                                            {{else}}
+                                                                {{#if (eq dataEpicaVerifikasi.[2].verified_by_user_id 0)}}
+                                                                    {{dataEpicaVerifikasi.[2].pelaksana_text}}
+                                                                {{else}}
+                                                                    {{dataEpicaVerifikasi.[2].fullname}}
+                                                                {{/if}}
+                                                            {{/unless}}
+                                                        {{/if}}
+                                                    </p>
+                                                </div>
+                                                {{#if dataEpicaVerifikasi.[2].id}}
+                                                    <input type="hidden" name="verifikasi_id_3" value="{{dataEpicaVerifikasi.[2].id}}">
+                                                {{else}}
+                                                    <input type="hidden" name="verifikasi_id_3" value="0">
+                                                {{/if}}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                    <br>
+                                    <br>
+                                <input type="hidden" name="pica_master_id" value="{{dataEpicaMaster.id}}">
+                                <input type="hidden" id="pathname" name="pathname" value="">
+                                <input type="hidden" id="toStatus" name="toStatus" value="">
+                                <input type="hidden" id="newPica" name="newPica" value="0">
+                                <input type="hidden" id="statusVerifikasi" name="statusVerifikasi" value="">
+                                {{#if roleMatch}}
+                                <input type="submit" id="submitBtn" name="submitBtn" class="btn btn-primary float-right" style="margin-left:10px">
+                                {{/if}}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{{#section 'custom_script'}}
+<script>
+    var alias_masalah="{{dataEpicaMaster.alias_permasalahan}}";
+    var pica_master_status_id = "{{dataEpicaMaster.pica_status_id}}";
+    var dataPersetujuan={{{persetujuanJSON}}};
+    var dataVerifikasi = {{{EpicaVerifikasiJSON}}};
+    var pica_master_id = "{{dataEpicaMaster.id}}";
+    //console.log(dataVerifikasi);
+
+    $(document).ready(function() {
+        var path = window.location.pathname;
+        $('#pathname').val(path);
+
+        $('input[name=persetujuan_id]').attr("disabled",true);
+        for (var i= 0; i < dataPersetujuan.length;i++ ) {
+            if (alias_masalah == dataPersetujuan[i].alias_permasalahan )
+                $("input[name=persetujuan_id][value=" + dataPersetujuan[i].id + "]").prop('checked', true);
+        }
+
+        $('#deskripsi_masalah').summernote({
+            toolbar: false,
+            disableDragAndDrop :true,
+            disableResizeEditor: true,
+            code: true
+        });
+        $('#deskripsi_masalah'). summernote('disable');
+
+        $('#akar_masalah').summernote({
+            toolbar: false,
+            disableDragAndDrop :true,
+            disableResizeEditor: true,
+            code: true
+        });
+        $('#akar_masalah'). summernote('disable');
+
+        //Begin Status Modifying
+        var status = decideStatus();
+        disableAllVerif();
+
+        if (status == 1) {
+            //status 1 -> only insert rencana verifikasi 1
+            $("#tanggal_rencana_1").prop('disabled', false);
+            $("#tanggal_rencana_1").daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                autoUpdateInput: false,
+                minDate: new Date(),
+                locale: {
+                    format: 'DD MMM YYYY'
+                }
+            }).on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD MMM YYYY'));
+            });
+            $("#toStatus").val(4);
+
+        } else if (status == 2) {
+            //status 2 -> only insert catatan, open or close
+            $("#catatan_1").show();
+            $("#catatan_1").summernote();
+            $("#sv11").prop('disabled', false);
+            $("#sv12").prop('disabled', false);
+            
+            /*
+            //revetting back, this date is locked now with newer update
+            //new update, even though rencana is filled, it is editable now -> but only in this status
+            $("#tanggal_rencana_1").prop('disabled', false);
+            $("#tanggal_rencana_1").prop('readonly', false);
+            $("#tanggal_rencana_1").daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                autoUpdateInput: false,
+                minDate: new Date(),
+                locale: {
+                    format: 'DD MMM YYYY'
+                }
+            }).on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD MMM YYYY'));
+            });
+            */
+
+            //default db closed
+            $("#toStatus").val(5);
+            $('#pathname').val('/epicaStatusFive/'+pica_master_id);
+
+            $('input[type=radio][name=status_verifikasi_1]').change(function() {
+                if (this.value == 'Open') {
+                    //db open
+                    $("#toStatus").val(4);
+                    var path = window.location.pathname;
+                    $('#pathname').val(path); 
+
+                    $("#tanggal_rencana_2").prop('disabled', false);
+                    $("#tanggal_rencana_2").daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        autoUpdateInput: false,
+                        minDate: new Date(),
+                        locale: {
+                            format: 'DD MMM YYYY'
+                        }
+                    }).on('apply.daterangepicker', function(ev, picker) {
+                        $(this).val(picker.startDate.format('DD MMM YYYY'));
+                    });
+                }
+                else if (this.value == 'Close') {
+                    $("#toStatus").val(5);
+                    $('#pathname').val('/epicaStatusFive/'+pica_master_id);
+                    $("#tanggal_rencana_2").prop('disabled', true);
+                }
+            });
+        } else if (status == 3) {
+            //status 3 -> only insert catatan, open or close
+            $("#catatan_2").show();
+            $("#catatan_2").summernote();
+            $("#sv21").prop('disabled', false);
+            $("#sv22").prop('disabled', false);
+
+            //default db closed
+            $("#toStatus").val(5);
+            $('#pathname').val('/epicaStatusFive/'+pica_master_id);
+
+            $('input[type=radio][name=status_verifikasi_2]').change(function() {
+                if (this.value == 'Open') {
+                    //db open
+                    $("#toStatus").val(4);
+                    var path = window.location.pathname;
+                    $('#pathname').val(path); 
+
+                    $("#tanggal_rencana_3").prop('disabled', false);
+                    $("#tanggal_rencana_3").daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        autoUpdateInput: false,
+                        minDate: new Date(),
+                        locale: {
+                            format: 'DD MMM YYYY'
+                        }
+                    }).on('apply.daterangepicker', function(ev, picker) {
+                        $(this).val(picker.startDate.format('DD MMM YYYY'));
+                    });
+                }
+                else if (this.value == 'Close') {
+                    $("#toStatus").val(5);
+                    $('#pathname').val('/epicaStatusFive/'+pica_master_id);
+                    $("#tanggal_rencana_3").prop('disabled', true);
+                }
+            });
+        } else if (status == 4) {
+            //status 4 -> only insert catatan, open or close
+            $("#catatan_3").show();
+            $("#catatan_3").summernote();
+            $("#sv31").prop('disabled', false);
+            $("#sv32").prop('disabled', false);
+
+            //default db closed -> changed, no matter what DB Will still be closed
+            $("#toStatus").val(5);
+            $('#pathname').val('/epicaStatusFive/'+pica_master_id);
+
+            console.log(dataVerifikasi);
+            console.log(dataVerifikasi[2].catatan);
+
+            if (dataVerifikasi[2].catatan != null && dataVerifikasi[2].catatan != ""){
+                //db open
+                $("#toStatus").val(5); //CHANGED
+                $("#newPica").val('1');
+                var path = window.location.pathname;
+                $('#pathname').val(path); 
+
+                $('#submitBtn').val('Buat Pica Baru');
+                //do stuff here for new pica 
+            }
+            $('input[type=radio][name=status_verifikasi_3]').change(function() {
+                if (this.value == 'Open') {
+                    //db open
+                    $("#toStatus").val(5); //CHANGED
+                    $("#newPica").val('1');
+                    var path = window.location.pathname;
+                    $('#pathname').val(path); 
+
+                    $('#submitBtn').val('Buat Pica Baru');
+                    //do stuff here for new pica 
+                }
+                else if (this.value == 'Close') {
+                    $("#toStatus").val(5);
+                    $("#newPica").val('0');
+                    $('#pathname').val('/epicaStatusFive/'+pica_master_id);
+                    $("#tanggal_rencana_3").prop('disabled', true);
+
+                    $('#submitBtn').val('Submit');
+                    //do nothing, closed
+                }
+            });
+        }
+    });
+
+    function disableAllVerif() {
+        for (var i=1 ; i< 4; i++){
+            $("#catatan_"+i).hide();
+            $("#tanggal_rencana_"+i).prop('disabled', true);
+            $("#tanggal_actual_"+i).prop('disabled', true);
+            $("#sv"+i+"1").prop('disabled', true);
+            $("#sv"+i+"2").prop('disabled', true);
+        }
+    }
+    function decideStatus() {
+        if (pica_master_status_id == "8") {
+            //array empty, no data, status 1
+            $('#statusVerifikasi').val("1"); 
+            return 1;
+        } else if (dataVerifikasi.length == 1) {
+            //array row 1 exist, status 2
+            $('#statusVerifikasi').val("2"); 
+            return 2;
+        } else if (dataVerifikasi.length == 2) {
+            //array row 2 exist, status 3
+            $('#statusVerifikasi').val("3"); 
+            return 3;
+        } else if (dataVerifikasi.length == 3) {
+            //array row 3 exist, status 4
+            $('#statusVerifikasi').val("4"); 
+            return 4;
+        }
+    }
+</script>
+{{/section}}

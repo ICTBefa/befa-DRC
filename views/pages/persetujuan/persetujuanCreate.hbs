@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="/assets/dist/css/printTable.css"/>
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> <b>{{title}}</b></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                          <form action="/CreateNewPersetujuan" method="post" role="form">
+                            <div class="form-group">
+                                <label for="kode">Nama Group</label>
+                                <input type="text" class="form-control" name="nama_group" placeholder="Nama Group" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama">Untuk Permasalahan</label>
+                                <input type="text" class="form-control" name="untuk_permasalahan" placeholder="Untuk Permasalahan" required>
+                            </div>    
+                            <div class="form-group">
+                                <label for="nama">Alias Permasalahan</label>
+                                <input type="text" class="form-control" name="alias" placeholder="Alias Permasalahan" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Input Text Persetujuan</label>
+                                <select name="input_text" class="form-control">
+                                <option value="0">Tidak Perlu</option>
+                                <option value="1">Perlu</option>
+                                </select>
+                            </div>                            
+                            <div class="form-group">
+                                <label>Status Department</label>
+                                <select name="status" class="form-control">
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                                </select>
+                            </div>
+                            <input type="submit" class="btn btn-primary" ></input>
+                        </form>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{{#section 'custom_script'}}
+    <script>
+        $('#dataTables').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "pageLength": 25
+        });
+
+    </script>
+{{/section}}

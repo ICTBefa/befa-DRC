@@ -1,0 +1,6 @@
+@media print {
+	button {display: none;}
+	a {display: none;}
+	input {display: none;}
+	.btn {display: none;}
+}
