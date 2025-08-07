@@ -5,7 +5,11 @@ const { unzipAndImportEpica } = require('./utils/unzip-and-import-epica');
 
 // Step 1: Git Pull
 console.log('[STEP 1] Git pull...');
-execSync('git pull', { stdio: 'inherit' });
+const gitDir = 'D:\\GIT\\Epica';
+execSync('git pull', {
+  cwd: gitDir,
+  stdio: 'inherit'
+});
 
 // Step 2: Detect file
 const now = new Date();
