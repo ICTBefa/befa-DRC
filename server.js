@@ -17,9 +17,9 @@ const fileLifespan = process.env.FILE_LIFESPAN_MINUTES * 60000;
 const cron = require('node-cron');
 const { exec } = require('child_process');
 
-// Set cron job: misalnya setiap hari jam 01:10 (bisa disesuaikan)
-cron.schedule('12 10 * * *', () => {
-  console.log('[CRON] Running scheduled job at', new Date());
+// Set cron job epica: misalnya setiap hari jam 01:10 (bisa disesuaikan)
+cron.schedule('55 13 * * *', () => {
+  console.log('[CRON] Running restore epica scheduled job at', new Date());
   exec('node job-runner-epica.js', (error, stdout, stderr) => {
     if (error) {
       console.error(`Error running job: ${error.message}`);
@@ -27,6 +27,52 @@ cron.schedule('12 10 * * *', () => {
       console.log(`Job stdout: ${stdout}`);
       if (stderr) console.error(`Job stderr: ${stderr}`);
     }
+  });
+});
+
+// Set cron job earchive: misalnya setiap hari jam 01:10 (bisa disesuaikan)
+cron.schedule('43 13 * * *', () => {
+  console.log('[CRON] Running restore earchivescheduled job at', new Date());
+  exec('node job-runner-earchive.js', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error running job: ${error.message}`);
+    } else {
+      console.log(`Job stdout: ${stdout}`);
+      if (stderr) console.error(`Job stderr: ${stderr}`);
+    }
+  });
+});
+
+// Jalankan setiap hari pukul 07:30 accurate
+cron.schedule('13 13 * * *', () => {
+  console.log('[CRON] Menjalankan job-runner-accurate.js...');
+  
+  const scriptPath = path.join(__dirname, 'job-runner-accurate.js');
+
+  exec(`node "${scriptPath}"`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`[ERROR] Gagal menjalankan job-runner-accurate.js: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`[STDERR] ${stderr}`);
+    }
+    console.log(`[OUTPUT]\n${stdout}`);
+  });
+});
+
+// Misalnya: jalan setiap Senin–Jumat jam 06:00 pagi ifca
+cron.schedule('23 13 * * 1-5', () => {
+  console.log('[CRON] Menjalankan job-runner-ifca.js...');
+  const scriptPath = path.join(__dirname, 'job-runner-ifca.js');
+
+  exec(`node "${scriptPath}"`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`[ERROR] Gagal menjalankan job-runner-ifca.js: ${error.message}`);
+      return;
+    }
+    if (stderr) console.error(`[STDERR] ${stderr}`);
+    if (stdout) console.log(`[OUTPUT]\n${stdout}`);
   });
 });
 

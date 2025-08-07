@@ -6,7 +6,7 @@ const { sendEmailNotif } = require('./send-email-notif');
 
 // Step 1: Git Pull
 console.log('[STEP 1] Git pull...');
-const gitDir = 'D:\\GIT\\Epica';
+const gitDir = 'D:\\GIT\\earchive';
 execSync('git pull', {
   cwd: gitDir,
   stdio: 'inherit'
@@ -16,12 +16,12 @@ execSync('git pull', {
 const now = new Date();
 const pad = (n) => n.toString().padStart(2, '0');
 const dateStr = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-const filePrefix = `befa_epica${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
-const zDrive = 'Z:\\';
+const filePrefix = `befa_earchive${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+const wDrive = 'W:\\';
 const targetDir = 'D:\\GIT\\test\\';
 
 // Cari semua file zip hari ini
-const zipFilesToday = fs.readdirSync(zDrive)
+const zipFilesToday = fs.readdirSync(wDrive)
     .filter(name => name.startsWith(filePrefix) && name.endsWith('.zip'));
 
 // Kalau tidak ada file
@@ -34,14 +34,14 @@ if (zipFilesToday.length === 0) {
 const zipFileName = zipFilesToday
     .map(name => ({
         name,
-        time: fs.statSync(path.join(zDrive, name)).mtime.getTime()
+        time: fs.statSync(path.join(wDrive, name)).mtime.getTime()
     }))
     .sort((a, b) => b.time - a.time)[0].name;
 
 console.log('[STEP 2] File ditemukan:', zipFileName);
 
 // Step 3: Copy ke target
-const src = path.join(zDrive, zipFileName);
+const src = path.join(wDrive, zipFileName);
 const dest = path.join(targetDir, zipFileName);
 fs.copyFileSync(src, dest);
 console.log('[STEP 3] File berhasil dicopy ke', dest);
@@ -51,18 +51,18 @@ unzipAndImport(dest)
   .then(() => {
     // Step 5: PM2 Restart
     console.log('[STEP 5] Restarting PM2...');
-    execSync('pm2 restart epica', { stdio: 'inherit' });
+    execSync('pm2 restart earchive', { stdio: 'inherit' });
     console.log('[DONE] Semua proses selesai.');
 
     // ✅ Email Notifikasi Berhasil
     sendEmailNotif({
-      subject: `[BERHASIL] JobRunner DRC Epica - ${zipFileName}`,
+      subject: `[BERHASIL] JobRunner DRC Earchive - ${zipFileName}`,
       html: `
         <p>Dear Group ICT,</p>
-        <p><strong>JobRunner EPICA berhasil</strong> dijalankan pada <strong>${new Date().toLocaleString()}</strong>.</p>
+        <p><strong>JobRunner EARCHIVE berhasil</strong> dijalankan pada <strong>${new Date().toLocaleString()}</strong>.</p>
         <p>File: <code>${zipFileName}</code></p>
         <p>Folder tujuan: <code>${dest}</code></p>
-        <p>Status DRC EPICA: ✅ AMAN</p>
+        <p>Status DRC EARCHIVE: ✅ AMAN</p>
         <br><p>👍</p>
         <br>
         <p>Terima Kasih</p>
@@ -74,14 +74,14 @@ unzipAndImport(dest)
 
     // ❌ Email Notifikasi Gagal
     sendEmailNotif({
-      subject: `[GAGAL] JobRunner DRC Epica - ${zipFileName}`,
+      subject: `[GAGAL] JobRunner DRC EARCHIVE - ${zipFileName}`,
       html: `
         <p>Dear Group ICT,</p>
-        <p><strong>JobRunner EPICA gagal</strong> dijalankan pada <strong>${new Date().toLocaleString()}</strong>.</p>
+        <p><strong>JobRunner EARCHIVE gagal</strong> dijalankan pada <strong>${new Date().toLocaleString()}</strong>.</p>
         <p>File: <code>${zipFileName}</code></p>
         <p>Error:</p>
         <pre>${err}</pre>
-        <p>Status DRC EPICA: ❌ BERMASALAH</p>
+        <p>Status DRC EARCHIVE: ❌ BERMASALAH</p>
         <br><p>❌</p>
         <br>
         <p>MOHON SEGERA DI TINDAK LANJUTI.</p>

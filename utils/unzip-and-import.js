@@ -3,7 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const fs = require('fs');
 
-async function unzipAndImportEpica(zipPath) {
+async function unzipAndImport(zipPath) {
   const unzipDir = zipPath.replace(/\.zip$/, '');
   const zip = new AdmZip(zipPath);
 
@@ -28,4 +28,4 @@ async function unzipAndImportEpica(zipPath) {
     });
 }
 
-module.exports = { unzipAndImportEpica };
+module.exports = { unzipAndImport };
